@@ -14,15 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with DeltaRedis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.DeltaRedis.Shared.Cache;
+package com.gmail.tracebachi.DeltaRedis.Shared.Interfaces;
 
 /**
- * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
+ * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 1/22/16.
  */
-public interface Cacheable
+public interface Shutdownable
 {
     /**
-     * @return Time created at in milliseconds
+     * This method clears all internal, owned data structures, nullifies references, and
+     * performs all functions necessary to cleanup the object making it unusable after
+     * this call.
      */
-    long getTimeCreatedAt();
+    void shutdown();
 }

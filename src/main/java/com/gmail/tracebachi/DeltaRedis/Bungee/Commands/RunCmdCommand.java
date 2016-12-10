@@ -14,22 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with DeltaRedis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.DeltaRedis.Spigot.Commands;
+package com.gmail.tracebachi.DeltaRedis.Bungee.Commands;
 
+import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedisApi;
+import com.gmail.tracebachi.DeltaRedis.Bungee.Events.DeltaRedisMessageEvent;
 import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Servers;
-import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedis;
-import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedisApi;
-import com.gmail.tracebachi.DeltaRedis.Spigot.Events.DeltaRedisMessageEvent;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.plugin.PluginManager;
+import net.md_5.bungee.event.EventHandler;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,32 +37,35 @@ import java.util.List;
 import java.util.Set;
 
 import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
+import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.COMMA;
 
 /**
- * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/28/15.
+ * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 4/28/16.
  */
-public class RunCmdCommand implements CommandExecutor, Listener, Registerable, Shutdownable
+public class RunCmdCommand extends Command implements Listener, Registerable, Shutdownable
 {
     private DeltaRedis plugin;
 
-    public RunCmdCommand(DeltaRedis plugin)
+    public RunCmdCommand(DeltaRedis deltaRedis)
     {
-        this.plugin = plugin;
+        super("runcmdbungee", null, "rcbungee");
+        this.plugin = deltaRedis;
     }
 
     @Override
     public void register()
     {
-        plugin.getCommand("runcmd").setExecutor(this);
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        PluginManager pluginManager = plugin.getProxy().getPluginManager();
+        pluginManager.registerCommand(plugin, this);
+        pluginManager.registerListener(plugin, this);
     }
 
     @Override
     public void unregister()
     {
-        plugin.getCommand("runcmd").setExecutor(null);
-
-        HandlerList.unregisterAll(this);
+        PluginManager pluginManager = plugin.getProxy().getPluginManager();
+        pluginManager.unregisterCommand(this);
+        pluginManager.unregisterListener(this);
     }
 
     @Override
@@ -73,80 +76,62 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
+    public void execute(CommandSender sender, String[] args)
     {
         if(!sender.hasPermission("DeltaRedis.RunCmd"))
         {
-            sender.sendMessage(format(
+            sendMessage(sender, format(
                 "NoPerm",
                 "DeltaRedis.RunCmd"));
-            return true;
+            return;
         }
 
         if(args.length <= 1)
         {
-            sender.sendMessage(format(
+            sendMessage(sender, format(
                 "Usage",
-                "/runcmd server[,server,...] command"));
-            sender.sendMessage(format(
+                "/runcmdbungee server[,server,...] command"));
+            sendMessage(sender, format(
                 "Usage",
-                "/runcmd ALL command"));
-            return true;
+                "/runcmdbungee ALL command"));
+            return;
         }
 
         DeltaRedisApi deltaApi = DeltaRedisApi.instance();
-        Set<String> argServers = new HashSet<>(Arrays.asList(args[0].split(",")));
+        Set<String> argServers = new HashSet<>(Arrays.asList(COMMA.split(args[0])));
         Set<String> servers = deltaApi.getCachedServers();
-        String senderName = sender.getName();
         String commandStr = joinArgsForCommand(args);
+        String senderName = sender.getName();
 
-        if(doesSetContain(argServers, "BUNGEE"))
-        {
-            if(deltaApi.isBungeeCordOnline())
-            {
-                deltaApi.sendServerCommand(Servers.BUNGEECORD, commandStr, senderName);
-
-                sender.sendMessage(format(
-                    "DeltaRedis.CommandSent",
-                    "BUNGEE"));
-            }
-            else
-            {
-                sender.sendMessage(format("DeltaRedis.BungeeNotAvailable"));
-            }
-        }
-        else if(doesSetContain(argServers, "ALL"))
+        if(doesSetContain(argServers, "ALL"))
         {
             deltaApi.sendServerCommand(Servers.SPIGOT, commandStr, senderName);
 
-            sender.sendMessage(format(
+            sendMessage(sender, format(
                 "DeltaRedis.CommandSent",
                 "ALL"));
+            return;
         }
-        else
+
+        for(String dest : argServers)
         {
-            for(String dest : argServers)
+            String correctedDest = getMatchInSet(servers, dest);
+
+            if(correctedDest != null)
             {
-                String correctedDest = getMatchInSet(servers, dest);
+                deltaApi.sendServerCommand(correctedDest, commandStr, senderName);
 
-                if(correctedDest != null)
-                {
-                    deltaApi.sendServerCommand(correctedDest, commandStr, senderName);
-
-                    sender.sendMessage(format(
-                        "DeltaRedis.CommandSent",
-                        dest));
-                }
-                else
-                {
-                    sender.sendMessage(format(
-                        "DeltaRedis.ServerNotFound",
-                        dest));
-                }
+                sendMessage(sender, format(
+                    "DeltaRedis.CommandSent",
+                    dest));
+            }
+            else
+            {
+                sendMessage(sender, format(
+                    "DeltaRedis.ServerNotFound",
+                    dest));
             }
         }
-
-        return true;
     }
 
     @EventHandler
@@ -164,7 +149,8 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
                 ", sender: " + sender +
                 ", command: /" + command);
 
-            plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+            ProxyServer proxy = plugin.getProxy();
+            proxy.getPluginManager().dispatchCommand(proxy.getConsole(), command);
         }
     }
 
@@ -195,5 +181,10 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
             }
         }
         return null;
+    }
+
+    private void sendMessage(CommandSender receiver, String message)
+    {
+        receiver.sendMessage(TextComponent.fromLegacyText(message));
     }
 }

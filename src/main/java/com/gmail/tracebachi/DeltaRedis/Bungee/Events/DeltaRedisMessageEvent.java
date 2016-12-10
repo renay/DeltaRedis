@@ -14,10 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with DeltaRedis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.DeltaRedis.Bungee;
+package com.gmail.tracebachi.DeltaRedis.Bungee.Events;
 
 import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.plugin.Event;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
@@ -26,17 +29,23 @@ public class DeltaRedisMessageEvent extends Event
 {
     private final String sendingServer;
     private final String channel;
-    private final String message;
+    private final List<String> messageParts;
 
-    public DeltaRedisMessageEvent(String sendingServer, String channel, String message)
+    public DeltaRedisMessageEvent(String sendingServer, String channel, List<String> messageParts)
     {
-        this.sendingServer = Preconditions.checkNotNull(sendingServer, "Sending Server was null.");
-        this.channel = Preconditions.checkNotNull(channel, "Channel was null.");
-        this.message = Preconditions.checkNotNull(message, "Message was null.");
+        Preconditions.checkNotNull(sendingServer, "sendingServer");
+        Preconditions.checkNotNull(channel, "channel");
+        Preconditions.checkNotNull(messageParts, "messageParts");
+        Preconditions.checkArgument(!sendingServer.isEmpty(), "Empty sendingServer");
+        Preconditions.checkArgument(!channel.isEmpty(), "Empty channel");
+
+        this.sendingServer = sendingServer;
+        this.channel = channel;
+        this.messageParts = Collections.unmodifiableList(messageParts);
     }
 
     /**
-     * @return Name of the server that sent the message.
+     * @return Name of the server that sent the message
      */
     public String getSendingServer()
     {
@@ -44,7 +53,7 @@ public class DeltaRedisMessageEvent extends Event
     }
 
     /**
-     * @return Name of the channel that the message is targeted at.
+     * @return Name of the channel that the message is targeted at
      */
     public String getChannel()
     {
@@ -52,19 +61,10 @@ public class DeltaRedisMessageEvent extends Event
     }
 
     /**
-     * @return The message/data received.
+     * @return The message parts/data received
      */
-    public String getMessage()
+    public List<String> getMessageParts()
     {
-        return message;
-    }
-
-    /**
-     * @return Comma separated string of the sendingServer, channel, and message.
-     */
-    @Override
-    public String toString()
-    {
-        return "{" + sendingServer + " , " + channel + " , " + message + "}";
+        return messageParts;
     }
 }

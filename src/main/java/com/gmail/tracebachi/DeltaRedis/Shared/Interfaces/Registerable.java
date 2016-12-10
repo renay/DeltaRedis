@@ -14,15 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with DeltaRedis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.DeltaRedis.Shared.Cache;
+package com.gmail.tracebachi.DeltaRedis.Shared.Interfaces;
 
 /**
- * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
+ * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 1/25/16.
  */
-public interface Cacheable
+public interface Registerable
 {
     /**
-     * @return Time created at in milliseconds
+     * Registers a command or listener
      */
-    long getTimeCreatedAt();
+    void register();
+
+    /**
+     * Unregisters a command or listener
+     */
+    void unregister();
 }

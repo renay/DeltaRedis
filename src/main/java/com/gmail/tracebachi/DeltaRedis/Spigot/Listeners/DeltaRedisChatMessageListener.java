@@ -14,28 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with DeltaRedis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.DeltaRedis.Spigot;
+package com.gmail.tracebachi.DeltaRedis.Spigot.Listeners;
 
 import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels;
-import com.gmail.tracebachi.DeltaRedis.Shared.Registerable;
-import com.gmail.tracebachi.DeltaRedis.Shared.Shutdownable;
+import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
+import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
+import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Spigot.Events.DeltaRedisMessageEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.DELTA;
+import java.util.List;
+
 import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.NEWLINE;
 
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedisListener implements Listener, Registerable, Shutdownable
+public class DeltaRedisChatMessageListener implements Listener, Registerable, Shutdownable
 {
     private DeltaRedis plugin;
 
-    public DeltaRedisListener(DeltaRedis plugin)
+    public DeltaRedisChatMessageListener(DeltaRedis plugin)
     {
         this.plugin = plugin;
     }
@@ -63,13 +66,12 @@ public class DeltaRedisListener implements Listener, Registerable, Shutdownable
     public void onDeltaRedisMessage(DeltaRedisMessageEvent event)
     {
         String channel = event.getChannel();
-        String eventMessage = event.getMessage();
+        List<String> messageParts = event.getMessageParts();
 
         if(channel.equals(DeltaRedisChannels.SEND_ANNOUNCEMENT))
         {
-            String[] splitMessage = DELTA.split(eventMessage, 2);
-            String permission = splitMessage[0];
-            String[] lines = NEWLINE.split(splitMessage[1]);
+            String permission = messageParts.get(0);
+            String[] lines = NEWLINE.split(messageParts.get(1));
 
             if(permission.equals(""))
             {
@@ -88,9 +90,8 @@ public class DeltaRedisListener implements Listener, Registerable, Shutdownable
         }
         else if(channel.equals(DeltaRedisChannels.SEND_MESSAGE))
         {
-            String[] splitMessage = DELTA.split(eventMessage, 2);
-            String receiverName = splitMessage[0];
-            String[] lines = NEWLINE.split(splitMessage[1]);
+            String receiverName = messageParts.get(0);
+            String[] lines = NEWLINE.split(messageParts.get(1));
 
             if(receiverName.equalsIgnoreCase("console"))
             {
