@@ -12,7 +12,29 @@ and
 [Bungee](https://github.com/GeeItsZee/DeltaRedis/blob/master/src/main/java/com/gmail/tracebachi/DeltaRedis/Bungee/DeltaRedisApi.java). 
 They are similar in structure and use, but it is important to select the appropriate API depending on where your plugin will run.
 
-# Using the API Publish System
+## How to include the API with Maven
+
+```xml
+    <repositories>
+        <repository>
+            <id>delta-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+```
+
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>com.gmail.tracebachi</groupId>
+            <artifactId>DeltaRedis</artifactId>
+            <version>3.x.x</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+```
+
+## Using the API Publish System
 ```java
 public void sendHelloToZee() {
   DeltaRedisApi api = DeltaRedisApi.instance();
@@ -38,7 +60,7 @@ public void onMessage(DeltaRedisMessageEvent event) {
 }
 ```
 
-# Finding a Player with the API 
+## Finding a Player with the API 
 ```java
 public void findZee() {
   DeltaRedisApi api = DeltaRedisApi.instance();
