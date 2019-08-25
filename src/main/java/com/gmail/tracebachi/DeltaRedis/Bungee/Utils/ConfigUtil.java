@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with DeltaRedis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.DeltaRedis.Bungee;
+package com.gmail.tracebachi.DeltaRedis.Bungee.Utils;
 
 import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -30,10 +30,10 @@ public interface ConfigUtil
      * Loads the resource from the JAR and saves it to the destination under the plugin's
      * data folder. By default, the destination file will not be replaced if it exists.
      *
-     * @param plugin          Plugin that contains the resource in it's JAR.
-     * @param resourceName    Filename of the resource.
-     * @param destinationName Filename of the destination.
-     * @return Destination File.
+     * @param plugin          Plugin that contains the resource in its JAR
+     * @param resourceName    Filename of the resource
+     * @param destinationName Filename of the destination
+     * @return Destination File
      */
     static File saveResource(Plugin plugin, String resourceName, String destinationName)
     {
@@ -51,32 +51,26 @@ public interface ConfigUtil
     {
         File folder = plugin.getDataFolder();
 
-        if(!folder.exists() && !folder.mkdir())
-        {
+        if (!folder.exists() && !folder.mkdir()) {
             return null;
         }
 
         File destinationFile = new File(folder, destinationName);
 
-        try
-        {
-            if(!destinationFile.exists() || replace)
-            {
-                if(destinationFile.createNewFile())
-                {
-                    try(InputStream in = plugin.getResourceAsStream(resourceName);
-                        OutputStream out = new FileOutputStream(destinationFile))
-                    {
+        try {
+            if (!destinationFile.exists() || replace) {
+                if (destinationFile.createNewFile()) {
+                    try (InputStream in = plugin.getResourceAsStream(resourceName);
+                         OutputStream out = new FileOutputStream(destinationFile)) {
                         ByteStreams.copy(in, out);
                     }
+                } else {
+                    return null;
                 }
-                else { return null; }
             }
 
             return destinationFile;
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }

@@ -14,28 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with DeltaRedis.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.gmail.tracebachi.DeltaRedis.Spigot;
+package com.gmail.tracebachi.DeltaRedis.Spigot.Listeners;
 
 import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels;
-import com.gmail.tracebachi.DeltaRedis.Shared.Registerable;
-import com.gmail.tracebachi.DeltaRedis.Shared.Shutdownable;
+import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
+import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
+import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Spigot.Events.DeltaRedisMessageEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.DELTA;
+import java.util.List;
+
 import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.NEWLINE;
 
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedisListener implements Listener, Registerable, Shutdownable
+public class DeltaRedisChatMessageListener implements Listener, Registerable, Shutdownable
 {
     private DeltaRedis plugin;
 
-    public DeltaRedisListener(DeltaRedis plugin)
+    public DeltaRedisChatMessageListener(DeltaRedis plugin)
     {
         this.plugin = plugin;
     }
@@ -63,50 +66,34 @@ public class DeltaRedisListener implements Listener, Registerable, Shutdownable
     public void onDeltaRedisMessage(DeltaRedisMessageEvent event)
     {
         String channel = event.getChannel();
-        String eventMessage = event.getMessage();
+        List<String> messageParts = event.getMessageParts();
 
-        if(channel.equals(DeltaRedisChannels.SEND_ANNOUNCEMENT))
-        {
-            String[] splitMessage = DELTA.split(eventMessage, 2);
-            String permission = splitMessage[0];
-            String[] lines = NEWLINE.split(splitMessage[1]);
+        if (channel.equals(DeltaRedisChannels.SEND_ANNOUNCEMENT)) {
+            String permission = messageParts.get(0);
+            String[] lines = NEWLINE.split(messageParts.get(1));
 
-            if(permission.equals(""))
-            {
-                for(String line : lines)
-                {
+            if (permission.equals("")) {
+                for (String line : lines) {
                     Bukkit.broadcastMessage(line);
                 }
-            }
-            else
-            {
-                for(String line : lines)
-                {
+            } else {
+                for (String line : lines) {
                     Bukkit.broadcast(line, permission);
                 }
             }
-        }
-        else if(channel.equals(DeltaRedisChannels.SEND_MESSAGE))
-        {
-            String[] splitMessage = DELTA.split(eventMessage, 2);
-            String receiverName = splitMessage[0];
-            String[] lines = NEWLINE.split(splitMessage[1]);
+        } else if (channel.equals(DeltaRedisChannels.SEND_MESSAGE)) {
+            String receiverName = messageParts.get(0);
+            String[] lines = NEWLINE.split(messageParts.get(1));
 
-            if(receiverName.equalsIgnoreCase("console"))
-            {
-                for(String line : lines)
-                {
+            if (receiverName.equalsIgnoreCase("console")) {
+                for (String line : lines) {
                     Bukkit.getConsoleSender().sendMessage(line);
                 }
-            }
-            else
-            {
+            } else {
                 Player receiver = Bukkit.getPlayerExact(receiverName);
 
-                if(receiver != null)
-                {
-                    for(String line : lines)
-                    {
+                if (receiver != null) {
+                    for (String line : lines) {
                         receiver.sendMessage(line);
                     }
                 }

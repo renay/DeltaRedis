@@ -17,154 +17,128 @@
 package com.gmail.tracebachi.DeltaRedis.Bungee;
 
 import com.gmail.tracebachi.DeltaRedis.Shared.Cache.CachedPlayer;
-import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels;
-import com.gmail.tracebachi.DeltaRedis.Shared.Redis.DRCommandSender;
+import com.gmail.tracebachi.DeltaRedis.Shared.Redis.DeltaRedisCommandSender;
 import com.gmail.tracebachi.DeltaRedis.Shared.Servers;
 import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ProxyServer;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+
+import static com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels.*;
 
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/11/15.
  */
-public class DeltaRedisApi {
+public class DeltaRedisApi
+{
     private static DeltaRedisApi instance;
 
-    public static DeltaRedisApi instance() {
-        return instance;
-    }
-
-    private DRCommandSender deltaSender;
+    private DeltaRedisCommandSender deltaSender;
     private DeltaRedis plugin;
 
     /**
-     * Package-private constructor.
+     * @return Singleton instance of DeltaRedisApi
      */
-    DeltaRedisApi(DRCommandSender deltaSender, DeltaRedis plugin) {
-        if (instance != null) {
-            instance.shutdown();
-        }
-
-        this.deltaSender = deltaSender;
-        this.plugin = plugin;
-
-        instance = this;
+    public static DeltaRedisApi instance()
+    {
+        return instance;
     }
 
     /**
-     * Package-private shutdown method.
+     * @return Name of the BungeeCord instance to which the server belongs
+     * <p>This value is set in the configuration file for each server</p>
      */
-    void shutdown() {
-        this.deltaSender = null;
-        this.plugin = null;
-
-        instance = null;
-    }
-
-    /**
-     * @return Name of the BungeeCord instance to which the server belongs.
-     * This value is set in the configuration file for each server.
-     */
-    public String getBungeeName() {
+    public String getBungeeName()
+    {
         return plugin.getBungeeName();
     }
 
     /**
-     * @return Name of the server (String). If the server is BungeeCord, the
-     * server name will be {@link Servers#BUNGEECORD}.
+     * @return Name of the current server
+     * <p>This value is set in the configuration file for each server</p>
      */
-    public String getServerName() {
+    public String getServerName()
+    {
         return plugin.getServerName();
     }
 
     /**
      * @return An unmodifiable set of servers that are part of the same
-     * BungeeCord as the current server. This method will retrieve the
-     * servers from the last call to {@link DRCommandSender#getServers()}.
+     * BungeeCord (from last call to {@link DeltaRedisCommandSender#getServers()})
      */
-    public Set<String> getCachedServers() {
+    public Set<String> getCachedServers()
+    {
         return deltaSender.getCachedServers();
     }
 
     /**
-     * @return True if the BungeeCord instance was last known to be online.
-     * False if it was not.
+     * @return True if the BungeeCord instance was last known to be online
+     * or false
      */
-    public boolean isBungeeCordOnline() {
+    public boolean isBungeeCordOnline()
+    {
         return deltaSender.isBungeeCordOnline();
     }
 
     /**
-     * @return An unmodifiable set of players (names) that are part of the
-     * same BungeeCord. This method will retrieve the players from the last
-     * call to {@link DRCommandSender#getPlayers()}.
+     * @return An unmodifiable set of player names that are part of the
+     * same BungeeCord (from last call to {@link DeltaRedisCommandSender#getPlayers()})
      */
-    public Set<String> getCachedPlayers() {
+    public Set<String> getCachedPlayers()
+    {
         return deltaSender.getCachedPlayers();
     }
 
     /**
-     * Publishes a message built from string message pieces joined by
-     * the "/\" (forward-slash, back-slash) to Redis.
+     * Publishes a message built from string message parts
      *
-     * @param destination   Server to send message to.
-     * @param channel       Channel of the message.
-     * @param messagePieces The parts of the message.
+     * @param destination   Server to send message to
+     * @param channel       Channel of the message
+     * @param messagePieces The parts of the message
      */
-    public void publish(String destination, String channel, String... messagePieces) {
-        String joinedMessage = String.join("/\\", (CharSequence[]) messagePieces);
-
-        publish(destination, channel, joinedMessage);
+    public void publish(String destination, String channel, String... messagePieces)
+    {
+        publish(destination, channel, Arrays.asList(messagePieces));
     }
 
     /**
-     * Publishes a message to Redis.
+     * Publishes a message to Redis
      *
-     * @param destination Server to send message to.
-     * @param channel     Channel of the message.
-     * @param message     The actual message.
+     * @param destination  Server to send message to
+     * @param channel      Channel of the message
+     * @param messageParts The actual message
      */
-    public void publish(String destination, String channel, String message) {
-        Preconditions.checkNotNull(destination, "DestServer was null.");
-        Preconditions.checkNotNull(channel, "Channel was null.");
-        Preconditions.checkNotNull(message, "Message was null.");
+    public void publish(String destination, String channel, List<String> messageParts)
+    {
+        Preconditions.checkNotNull(destination, "destination");
+        Preconditions.checkNotNull(channel, "channel");
+        Preconditions.checkNotNull(messageParts, "messageParts");
 
         if (plugin.getServerName().equals(destination)) {
-            plugin.onRedisMessageEvent(destination, channel, message);
+            plugin.onRedisMessageEvent(destination, channel, messageParts);
             return;
         }
 
         ProxyServer.getInstance().getScheduler().runAsync(
                 plugin,
-                () -> deltaSender.publish(
-                        destination,
-                        channel,
-                        message));
+                () -> deltaSender.publish(destination, channel, messageParts));
     }
 
     /**
-     * Sends a command that will run as OP by the receiving server.
+     * Sends a command that will run as OP by the receiving server
      *
      * @param destServer Destination server name, {@link Servers#SPIGOT},
-     *                   or {@link Servers#BUNGEECORD}.
-     * @param command    Command to send.
+     *                   or {@link Servers#BUNGEECORD}
+     * @param command    Command to send
+     * @param sender     Name to record in the logs as having run the command
      */
-    public void sendCommandToServer(String destServer, String command) {
-        sendCommandToServer(destServer, command, "UNKNOWN_PLUGIN");
-    }
-
-    /**
-     * Sends a command that will run as OP by the receiving server.
-     *
-     * @param destServer Destination server name or {@link Servers#SPIGOT}.
-     * @param command    Command to send.
-     * @param sender     Name to record in the logs as having run the command.
-     */
-    public void sendCommandToServer(String destServer, String command, String sender) {
-        Preconditions.checkNotNull(destServer, "DestServer was null.");
-        Preconditions.checkNotNull(command, "Command was null.");
-        Preconditions.checkNotNull(sender, "Sender was null.");
+    public void sendServerCommand(String destServer, String command, String sender)
+    {
+        Preconditions.checkNotNull(destServer, "destServer");
+        Preconditions.checkNotNull(command, "command");
+        Preconditions.checkNotNull(sender, "sender");
 
         if (plugin.getServerName().equals(destServer)) {
             ProxyServer instance = ProxyServer.getInstance();
@@ -174,23 +148,22 @@ public class DeltaRedisApi {
 
         ProxyServer.getInstance().getScheduler().runAsync(
                 plugin,
-                () -> deltaSender.publish(
-                        destServer,
-                        DeltaRedisChannels.RUN_CMD,
-                        sender + "/\\" + command));
+                () -> deltaSender.publish(destServer, RUN_CMD, sender, command));
     }
 
     /**
-     * Sends a message to a player on an unknown server. The message will not
-     * reach the player if they have logged off by the time the message
-     * reaches the server or if not player is online by the specified name.
+     * This method sends a message to a player on an unknown server. The
+     * message will not reach the player if they have logged off by the
+     * time the message reaches the server or if no player is online
+     * by the specified name.
      *
-     * @param playerName Name of the player to send message to.
-     * @param message    Message to send.
+     * @param playerName Name of the player to send message to
+     * @param message    Message to send
      */
-    public void sendMessageToPlayer(String playerName, String message) {
-        Preconditions.checkNotNull(playerName, "PlayerName was null.");
-        Preconditions.checkNotNull(message, "Message was null.");
+    public void sendMessageToPlayer(String playerName, String message)
+    {
+        Preconditions.checkNotNull(playerName, "playerName");
+        Preconditions.checkNotNull(message, "message");
 
         ProxyServer.getInstance().getScheduler().runAsync(
                 plugin,
@@ -204,63 +177,103 @@ public class DeltaRedisApi {
 
                     deltaSender.publish(
                             cachedPlayer.getServer(),
-                            DeltaRedisChannels.SEND_MESSAGE,
-                            playerName + "/\\" + message);
+                            SEND_MESSAGE,
+                            playerName,
+                            message);
                 });
     }
 
     /**
-     * Sends a message to a player in the specified server. The message will not
-     * reach the player if they have logged off by the time the message
-     * reaches the server.
+     * This method sends a message to a player on an unknown server. The
+     * message will not reach the player if they have logged off by the
+     * time the message reaches the server or if no player is online
+     * by the specified name.
      *
-     * @param server     Name of the server to send the message to.
-     * @param playerName Name of the player to send message to.
-     * @param message    Message to send.
+     * @param server     Name of the server to send message to
+     * @param playerName Name of the player to send message to
+     * @param message    Message to send
      */
-    public void sendMessageToPlayer(String server, String playerName, String message) {
-        Preconditions.checkNotNull(playerName, "PlayerName was null.");
-        Preconditions.checkNotNull(message, "Message was null.");
-        Preconditions.checkArgument(!server.equals(Servers.BUNGEECORD), "Server was BUNGEECORD.");
+    public void sendMessageToPlayer(String server, String playerName, String message)
+    {
+        Preconditions.checkNotNull(playerName, "playerName");
+        Preconditions.checkNotNull(message, "message");
+        Preconditions.checkArgument(
+                !server.equals(Servers.BUNGEECORD),
+                "Server set to BUNGEECORD");
 
         ProxyServer.getInstance().getScheduler().runAsync(
                 plugin,
                 () -> deltaSender.publish(
                         server,
-                        DeltaRedisChannels.SEND_MESSAGE,
-                        playerName + "/\\" + message));
+                        SEND_MESSAGE,
+                        playerName,
+                        message));
     }
 
     /**
-     * Sends an announcement to all players on a server.
+     * Sends an announcement to all players on a server
      *
-     * @param destServer   Destination server name or {@link Servers#SPIGOT}.
-     * @param announcement Announcement to send.
+     * @param destServer   Destination server name or {@link Servers#SPIGOT}
+     * @param announcement Announcement to send
      */
-    public void sendAnnouncementToServer(String destServer, String announcement) {
-        sendAnnouncementToServer(destServer, announcement, "");
+    public void sendServerAnnouncement(String destServer, String announcement)
+    {
+        sendServerAnnouncement(destServer, announcement, "");
     }
 
     /**
      * Sends an announcement to all players on a server with a specific
-     * permission.
+     * permission
      *
-     * @param destServer   Destination server name or {@link Servers#SPIGOT}.
-     * @param announcement Announcement to send.
-     * @param permission   Permission that a player must have to receive the
-     *                     announcement. The empty string, "", can be used to
-     *                     signal that a permission is not required.
+     * @param destServer   Destination server name or {@link Servers#SPIGOT}
+     * @param announcement Announcement to send
+     * @param permission   Permission required by players to view announcement or ""
      */
-    public void sendAnnouncementToServer(String destServer, String announcement, String permission) {
-        Preconditions.checkNotNull(destServer, "DestServer was null.");
-        Preconditions.checkNotNull(announcement, "Announcement was null.");
-        Preconditions.checkNotNull(permission, "Permission was null.");
+    public void sendServerAnnouncement(String destServer, String announcement, String permission)
+    {
+        Preconditions.checkNotNull(destServer, "destServer");
+        Preconditions.checkNotNull(announcement, "announcement");
+        Preconditions.checkNotNull(permission, "permission");
 
         ProxyServer.getInstance().getScheduler().runAsync(
                 plugin,
                 () -> deltaSender.publish(
                         destServer,
-                        DeltaRedisChannels.SEND_ANNOUNCEMENT,
-                        permission + "/\\" + announcement));
+                        SEND_ANNOUNCEMENT,
+                        permission,
+                        announcement));
+    }
+
+    /**
+     * Private constructor
+     */
+    private DeltaRedisApi(DeltaRedisCommandSender deltaSender, DeltaRedis plugin)
+    {
+        this.deltaSender = deltaSender;
+        this.plugin = plugin;
+    }
+
+    /**
+     * Sets up the api instance
+     */
+    static void setup(DeltaRedisCommandSender deltaSender, DeltaRedis plugin)
+    {
+        if (instance != null) {
+            shutdown();
+        }
+
+        instance = new DeltaRedisApi(deltaSender, plugin);
+    }
+
+    /**
+     * Cleans up the api instance
+     */
+    static void shutdown()
+    {
+        if (instance != null) {
+            instance.deltaSender = null;
+            instance.plugin = null;
+            instance = null;
+        }
     }
 }
