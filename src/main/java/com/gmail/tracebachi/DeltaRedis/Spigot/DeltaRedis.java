@@ -98,15 +98,14 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
         DeltaRedisApi.setup(commandSender, this);
 
         getServer().getScheduler().runTaskTimerAsynchronously(
-            this,
-            () ->
-            {
-                if(commandSender != null)
+                this,
+                () ->
                 {
-                    commandSender.getServers();
-                    commandSender.getPlayers();
-                }
-            }, 20, updatePeriod);
+                    if (commandSender != null) {
+                        commandSender.getServers();
+                        commandSender.getPlayers();
+                    }
+                }, 20, updatePeriod);
     }
 
     @Override
@@ -157,15 +156,14 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
     {
         Preconditions.checkNotNull(allMessageParts, "allMessageParts");
         Preconditions.checkArgument(
-            allMessageParts.size() >= 2,
-            "Less than expected number of parts in message");
+                allMessageParts.size() >= 2,
+                "Less than expected number of parts in message");
 
         String sendingServer = allMessageParts.get(0);
         String channel = allMessageParts.get(1);
         List<String> eventMessageParts = new ArrayList<>(allMessageParts.size() - 2);
 
-        for(int i = 2; i < allMessageParts.size(); i++)
-        {
+        for (int i = 2; i < allMessageParts.size(); i++) {
             eventMessageParts.add(allMessageParts.get(i));
         }
 
@@ -182,9 +180,9 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
         Preconditions.checkNotNull(messageParts, "messageParts");
 
         DeltaRedisMessageEvent event = new DeltaRedisMessageEvent(
-            sendingServer,
-            channel,
-            messageParts);
+                sendingServer,
+                channel,
+                messageParts);
 
         getServer().getPluginManager().callEvent(event);
     }
@@ -216,8 +214,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
     @Override
     public void debug(String message)
     {
-        if(debugEnabled)
-        {
+        if (debugEnabled) {
             getLogger().info("[Debug] " + message);
         }
     }
@@ -235,13 +232,11 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
         Preconditions.checkNotNull(serverName, "serverName");
 
         ConfigurationSection formatsSection = configuration.getConfigurationSection("Formats");
-        for(String key : formatsSection.getKeys(false))
-        {
+        for (String key : formatsSection.getKeys(false)) {
             String value = formatsSection.getString(key);
-            if(value != null)
-            {
+            if (value != null) {
                 String translatedFormat = ChatColor
-                    .translateAlternateColorCodes('&', value);
+                        .translateAlternateColorCodes('&', value);
                 ChatMessageHelper.instance().updateFormat("DeltaRedis." + key, translatedFormat);
             }
         }
@@ -256,12 +251,9 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
         Preconditions.checkNotNull(url, "RedisServer.URL");
         Preconditions.checkNotNull(port, "RedisServer.Port");
 
-        if(password != null)
-        {
+        if (password != null) {
             return "redis://" + password + '@' + url + ':' + port;
-        }
-        else
-        {
+        } else {
             return "redis://" + url + ':' + port;
         }
     }
@@ -269,10 +261,10 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
     private void setupRedis(ConfigurationSection configuration)
     {
         resources = new DefaultClientResources
-            .Builder()
-            .ioThreadPoolSize(3)
-            .computationThreadPoolSize(3)
-            .build();
+                .Builder()
+                .ioThreadPoolSize(3)
+                .computationThreadPoolSize(3)
+                .build();
 
         client = RedisClient.create(resources, RedisURI.create(getRedisUri(configuration)));
         client.setOptions(new ClientOptions.Builder().autoReconnect(true).build());
@@ -283,8 +275,8 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
         pubSubListener = new DeltaRedisPubSubListener(this);
         pubSubConn.addListener(pubSubListener);
         pubSubConn.sync().subscribe(
-            getBungeeName() + ':' + getServerName(),
-            getBungeeName() + ':' + Servers.SPIGOT);
+                getBungeeName() + ':' + getServerName(),
+                getBungeeName() + ':' + Servers.SPIGOT);
 
         commandSender = new DeltaRedisCommandSender(commandConn, this);
         commandSender.setup();

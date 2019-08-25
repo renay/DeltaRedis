@@ -35,8 +35,7 @@ public class ChatMessageHelper
      */
     public static ChatMessageHelper instance()
     {
-        if(instance == null)
-        {
+        if (instance == null) {
             instance = new ChatMessageHelper();
         }
 
@@ -48,7 +47,7 @@ public class ChatMessageHelper
      * string
      *
      * @param formatName Name of the format to use
-     * @param arguments List of arguments
+     * @param arguments  List of arguments
      * @return Formatted string or string indicating that the format was not
      * found
      */
@@ -57,19 +56,15 @@ public class ChatMessageHelper
         Preconditions.checkNotNull(formatName, "formatName");
         Preconditions.checkNotNull(arguments, "arguments");
 
-        if(instance == null)
-        {
+        if (instance == null) {
             instance = new ChatMessageHelper();
         }
 
         MessageFormat format = instance.formatMap.get(formatName);
 
-        if(format == null)
-        {
+        if (format == null) {
             return "Format not found. formatName: " + formatName;
-        }
-        else
-        {
+        } else {
             return format.format(arguments);
         }
     }
@@ -122,8 +117,8 @@ public class ChatMessageHelper
      * Adds or updates a new format
      *
      * @param formatName Name of the format to update
-     * @param format String representation of the format like the one
-     * that would be used in {@link MessageFormat}
+     * @param format     String representation of the format like the one
+     *                   that would be used in {@link MessageFormat}
      */
     public void updateFormat(String formatName, String format)
     {

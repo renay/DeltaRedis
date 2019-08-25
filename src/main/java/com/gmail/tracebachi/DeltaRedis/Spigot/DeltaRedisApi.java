@@ -104,10 +104,8 @@ public class DeltaRedisApi
         List<String> result = new ArrayList<>();
         partial = partial.toLowerCase();
 
-        for(String name : getCachedPlayers())
-        {
-            if(name.startsWith(partial))
-            {
+        for (String name : getCachedPlayers()) {
+            if (name.startsWith(partial)) {
                 result.add(name);
             }
         }
@@ -127,10 +125,8 @@ public class DeltaRedisApi
         List<String> result = new ArrayList<>();
         partial = partial.toLowerCase();
 
-        for(String name : getCachedServers())
-        {
-            if(name.toLowerCase().startsWith(partial))
-            {
+        for (String name : getCachedServers()) {
+            if (name.toLowerCase().startsWith(partial)) {
                 result.add(name);
             }
         }
@@ -167,14 +163,11 @@ public class DeltaRedisApi
         {
             CachedPlayer cachedPlayer = deltaSender.getPlayer(playerName);
 
-            if(syncCallback)
-            {
+            if (syncCallback) {
                 Bukkit.getScheduler().runTask(
-                    plugin,
-                    () -> callback.call(cachedPlayer));
-            }
-            else
-            {
+                        plugin,
+                        () -> callback.call(cachedPlayer));
+            } else {
                 callback.call(cachedPlayer);
             }
         });
@@ -205,17 +198,16 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(channel, "channel");
         Preconditions.checkNotNull(messageParts, "messageParts");
 
-        if(plugin.getServerName().equals(destination))
-        {
+        if (plugin.getServerName().equals(destination)) {
             Bukkit.getScheduler().runTask(
-                plugin,
-                () -> plugin.onRedisMessageEvent(destination, channel, messageParts));
+                    plugin,
+                    () -> plugin.onRedisMessageEvent(destination, channel, messageParts));
             return;
         }
 
         Bukkit.getScheduler().runTaskAsynchronously(
-            plugin,
-            () -> deltaSender.publish(destination, channel, messageParts));
+                plugin,
+                () -> deltaSender.publish(destination, channel, messageParts));
     }
 
     /**
@@ -232,17 +224,16 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(command, "command");
         Preconditions.checkNotNull(sender, "sender");
 
-        if(plugin.getServerName().equals(destServer))
-        {
+        if (plugin.getServerName().equals(destServer)) {
             Bukkit.getScheduler().runTask(
-                plugin,
-                () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+                    plugin,
+                    () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
             return;
         }
 
         Bukkit.getScheduler().runTaskAsynchronously(
-            plugin,
-            () -> deltaSender.publish(destServer, RUN_CMD, sender, command));
+                plugin,
+                () -> deltaSender.publish(destServer, RUN_CMD, sender, command));
     }
 
     /**
@@ -260,19 +251,21 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(message, "message");
 
         Bukkit.getScheduler().runTaskAsynchronously(
-            plugin,
-            () ->
-            {
-                CachedPlayer cachedPlayer = deltaSender.getPlayer(playerName);
+                plugin,
+                () ->
+                {
+                    CachedPlayer cachedPlayer = deltaSender.getPlayer(playerName);
 
-                if(cachedPlayer == null) { return; }
+                    if (cachedPlayer == null) {
+                        return;
+                    }
 
-                deltaSender.publish(
-                    cachedPlayer.getServer(),
-                    SEND_MESSAGE,
-                    playerName,
-                    message);
-            });
+                    deltaSender.publish(
+                            cachedPlayer.getServer(),
+                            SEND_MESSAGE,
+                            playerName,
+                            message);
+                });
     }
 
     /**
@@ -290,16 +283,16 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(playerName, "playerName");
         Preconditions.checkNotNull(message, "message");
         Preconditions.checkArgument(
-            !server.equals(Servers.BUNGEECORD),
-            "Server set to BUNGEECORD");
+                !server.equals(Servers.BUNGEECORD),
+                "Server set to BUNGEECORD");
 
         Bukkit.getScheduler().runTaskAsynchronously(
-            plugin,
-            () -> deltaSender.publish(
-                server,
-                SEND_MESSAGE,
-                playerName,
-                message));
+                plugin,
+                () -> deltaSender.publish(
+                        server,
+                        SEND_MESSAGE,
+                        playerName,
+                        message));
     }
 
     /**
@@ -328,12 +321,12 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(permission, "permission");
 
         Bukkit.getScheduler().runTaskAsynchronously(
-            plugin,
-            () -> deltaSender.publish(
-                destServer,
-                SEND_ANNOUNCEMENT,
-                permission,
-                announcement));
+                plugin,
+                () -> deltaSender.publish(
+                        destServer,
+                        SEND_ANNOUNCEMENT,
+                        permission,
+                        announcement));
     }
 
     /**
@@ -350,8 +343,7 @@ public class DeltaRedisApi
      */
     static void setup(DeltaRedisCommandSender deltaSender, DeltaRedis plugin)
     {
-        if(instance != null)
-        {
+        if (instance != null) {
             shutdown();
         }
 
@@ -363,8 +355,7 @@ public class DeltaRedisApi
      */
     static void shutdown()
     {
-        if(instance != null)
-        {
+        if (instance != null) {
             instance.deltaSender = null;
             instance.plugin = null;
             instance = null;

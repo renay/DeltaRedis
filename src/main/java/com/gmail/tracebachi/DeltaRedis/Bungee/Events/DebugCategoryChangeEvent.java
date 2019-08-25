@@ -31,8 +31,8 @@ public class DebugCategoryChangeEvent extends Event
      * Constructs a new DebugCategoryChangeEvent
      *
      * @param debugCategory Name of the debug type
-     * @param enable True if the user requested the debug category
-     * to be enable or false
+     * @param enable        True if the user requested the debug category
+     *                      to be enable or false
      */
     public DebugCategoryChangeEvent(String debugCategory, boolean enable)
     {

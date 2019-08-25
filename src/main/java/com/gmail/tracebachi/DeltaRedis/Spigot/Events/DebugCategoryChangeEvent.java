@@ -33,8 +33,8 @@ public class DebugCategoryChangeEvent extends Event
      * Constructs a new DebugCategoryChangeEvent
      *
      * @param debugCategory Name of the debug type
-     * @param enable True if the user requested the debug category
-     * to be enable or false
+     * @param enable        True if the user requested the debug category
+     *                      to be enable or false
      */
     public DebugCategoryChangeEvent(String debugCategory, boolean enable)
     {
@@ -74,7 +74,7 @@ public class DebugCategoryChangeEvent extends Event
 
     /**
      * @param forwardToBungee Set to true if the event should be forwarded
-     * to Bungee or false to prevent it
+     *                        to Bungee or false to prevent it
      */
     public void setForwardToBungee(boolean forwardToBungee)
     {

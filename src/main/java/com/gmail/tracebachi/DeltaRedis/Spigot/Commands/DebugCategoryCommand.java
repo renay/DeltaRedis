@@ -68,67 +68,58 @@ public class DebugCategoryCommand implements CommandExecutor, Listener, Register
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
     {
-        if(!sender.hasPermission("DeltaRedis.DebugCategory"))
-        {
+        if (!sender.hasPermission("DeltaRedis.DebugCategory")) {
             sender.sendMessage(format(
-                "NoPerm",
-                "DeltaRedis.DebugCategory"));
+                    "NoPerm",
+                    "DeltaRedis.DebugCategory"));
             return true;
         }
 
-        if(args.length < 2)
-        {
+        if (args.length < 2) {
             sender.sendMessage(format(
-                "Usage",
-                "/setdebug <category> <on|off>"));
+                    "Usage",
+                    "/setdebug <category> <on|off>"));
             return true;
         }
 
-        if(args[1].equalsIgnoreCase("on"))
-        {
+        if (args[1].equalsIgnoreCase("on")) {
             DebugCategoryChangeEvent event = new DebugCategoryChangeEvent(args[0], true);
             plugin.getServer().getPluginManager().callEvent(event);
 
-            if(event.shouldForwardToBungee())
-            {
+            if (event.shouldForwardToBungee()) {
                 DeltaRedisApi.instance().publish(
-                    Servers.BUNGEECORD,
-                    DeltaRedisChannels.DEBUG_CATEGORY_CHANGE,
-                    sender.getName(),
-                    args[0],
-                    "1");
+                        Servers.BUNGEECORD,
+                        DeltaRedisChannels.DEBUG_CATEGORY_CHANGE,
+                        sender.getName(),
+                        args[0],
+                        "1");
             }
 
             sender.sendMessage(format(
-                "DeltaRedis.DebugCategoryChange",
-                args[0],
-                "on"));
-        }
-        else if(args[1].equalsIgnoreCase("off"))
-        {
+                    "DeltaRedis.DebugCategoryChange",
+                    args[0],
+                    "on"));
+        } else if (args[1].equalsIgnoreCase("off")) {
             DebugCategoryChangeEvent event = new DebugCategoryChangeEvent(args[0], false);
             plugin.getServer().getPluginManager().callEvent(event);
 
-            if(event.shouldForwardToBungee())
-            {
+            if (event.shouldForwardToBungee()) {
                 DeltaRedisApi.instance().publish(
-                    Servers.BUNGEECORD,
-                    DeltaRedisChannels.DEBUG_CATEGORY_CHANGE,
-                    sender.getName(),
-                    args[0],
-                    "0");
+                        Servers.BUNGEECORD,
+                        DeltaRedisChannels.DEBUG_CATEGORY_CHANGE,
+                        sender.getName(),
+                        args[0],
+                        "0");
             }
 
             sender.sendMessage(format(
-                "DeltaRedis.DebugCategoryChange",
-                args[0],
-                "off"));
-        }
-        else
-        {
+                    "DeltaRedis.DebugCategoryChange",
+                    args[0],
+                    "off"));
+        } else {
             sender.sendMessage(format(
-                "Usage",
-                "/setdebug <category> <on|off>"));
+                    "Usage",
+                    "/setdebug <category> <on|off>"));
         }
 
         return true;
@@ -139,12 +130,9 @@ public class DebugCategoryCommand implements CommandExecutor, Listener, Register
     {
         String debugCategory = event.getDebugCategory();
 
-        if(debugCategory.equalsIgnoreCase("DeltaRedis"))
-        {
+        if (debugCategory.equalsIgnoreCase("DeltaRedis")) {
             plugin.setDebugEnabled(event.shouldEnable());
-        }
-        else if(debugCategory.equalsIgnoreCase("DeltaRedisBungee"))
-        {
+        } else if (debugCategory.equalsIgnoreCase("DeltaRedisBungee")) {
             event.setForwardToBungee(true);
         }
     }

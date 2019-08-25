@@ -51,32 +51,26 @@ public interface ConfigUtil
     {
         File folder = plugin.getDataFolder();
 
-        if(!folder.exists() && !folder.mkdir())
-        {
+        if (!folder.exists() && !folder.mkdir()) {
             return null;
         }
 
         File destinationFile = new File(folder, destinationName);
 
-        try
-        {
-            if(!destinationFile.exists() || replace)
-            {
-                if(destinationFile.createNewFile())
-                {
-                    try(InputStream in = plugin.getResourceAsStream(resourceName);
-                        OutputStream out = new FileOutputStream(destinationFile))
-                    {
+        try {
+            if (!destinationFile.exists() || replace) {
+                if (destinationFile.createNewFile()) {
+                    try (InputStream in = plugin.getResourceAsStream(resourceName);
+                         OutputStream out = new FileOutputStream(destinationFile)) {
                         ByteStreams.copy(in, out);
                     }
+                } else {
+                    return null;
                 }
-                else { return null; }
             }
 
             return destinationFile;
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return null;
         }

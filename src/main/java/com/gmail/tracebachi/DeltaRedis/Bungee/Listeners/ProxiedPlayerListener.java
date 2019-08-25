@@ -21,7 +21,7 @@ import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Redis.DeltaRedisCommandSender;
 import com.google.common.base.Preconditions;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
@@ -61,15 +61,13 @@ public class ProxiedPlayerListener implements Listener, Registerable, Shutdownab
     @Override
     public void shutdown()
     {
-        for(ProxiedPlayer player : BungeeCord.getInstance().getPlayers())
-        {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             commandSender.removePlayer(player.getName());
         }
 
         // This handles the case where PlayerDisconnectEvent may not have
         // been called to flush data for players that are no longer online.
-        for(String name : onlinePlayers)
-        {
+        for (String name : onlinePlayers) {
             commandSender.removePlayer(name);
         }
 

@@ -49,18 +49,15 @@ public class DeltaRedisPubSubListener implements RedisPubSubListener<String, Str
      */
     public void message(String channel, String completeMessage)
     {
-        try
-        {
+        try {
             List<String> publishedMessageParts = EscapeAndDelimiterUtil
-                .DELTA_SEPARATED
-                .unescapeAndUndelimit(completeMessage);
+                    .DELTA_SEPARATED
+                    .unescapeAndUndelimit(completeMessage);
 
             plugin.debug("Received message: " + completeMessage);
 
             plugin.onRedisMessageEvent(publishedMessageParts);
-        }
-        catch(IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             plugin.severe("Received badly formatted message: " + completeMessage);
 
             e.printStackTrace();
@@ -88,15 +85,21 @@ public class DeltaRedisPubSubListener implements RedisPubSubListener<String, Str
     /**
      * This method handles pattern matched messages, but is unused.
      */
-    public void message(String pattern, String channel, String message) {}
+    public void message(String pattern, String channel, String message)
+    {
+    }
 
     /**
      * This method handles pattern subscription, but is unused.
      */
-    public void psubscribed(String pattern, long count) {}
+    public void psubscribed(String pattern, long count)
+    {
+    }
 
     /**
      * This method handles pattern unsubscription, but is unused.
      */
-    public void punsubscribed(String pattern, long count) {}
+    public void punsubscribed(String pattern, long count)
+    {
+    }
 }

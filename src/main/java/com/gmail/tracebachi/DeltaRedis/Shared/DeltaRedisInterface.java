@@ -27,18 +27,18 @@ public interface DeltaRedisInterface
      * Handles a DeltaRedis message sent to the server
      *
      * @param publishedMessageParts Complete message (as parts) being received
-     * <p>
-     * This message parts include the sending server an channel
-     * as the first 2 elements.
-     * </p>
+     *                              <p>
+     *                              This message parts include the sending server an channel
+     *                              as the first 2 elements.
+     *                              </p>
      */
     void onRedisMessageEvent(List<String> publishedMessageParts);
 
     /**
      * Handles a DeltaRedis message sent to the server
      *
-     * @param server Server the message is coming from
-     * @param channel Channel the message is going to
+     * @param server       Server the message is coming from
+     * @param channel      Channel the message is going to
      * @param messageParts Channel message (in parts) being received
      */
     void onRedisMessageEvent(String server, String channel, List<String> messageParts);

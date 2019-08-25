@@ -20,7 +20,7 @@ import com.gmail.tracebachi.DeltaRedis.Shared.Cache.CachedPlayer;
 import com.gmail.tracebachi.DeltaRedis.Shared.Redis.DeltaRedisCommandSender;
 import com.gmail.tracebachi.DeltaRedis.Shared.Servers;
 import com.google.common.base.Preconditions;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -116,15 +116,14 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(channel, "channel");
         Preconditions.checkNotNull(messageParts, "messageParts");
 
-        if(plugin.getServerName().equals(destination))
-        {
+        if (plugin.getServerName().equals(destination)) {
             plugin.onRedisMessageEvent(destination, channel, messageParts);
             return;
         }
 
-        BungeeCord.getInstance().getScheduler().runAsync(
-            plugin,
-            () -> deltaSender.publish(destination, channel, messageParts));
+        ProxyServer.getInstance().getScheduler().runAsync(
+                plugin,
+                () -> deltaSender.publish(destination, channel, messageParts));
     }
 
     /**
@@ -141,16 +140,15 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(command, "command");
         Preconditions.checkNotNull(sender, "sender");
 
-        if(plugin.getServerName().equals(destServer))
-        {
-            BungeeCord instance = BungeeCord.getInstance();
+        if (plugin.getServerName().equals(destServer)) {
+            ProxyServer instance = ProxyServer.getInstance();
             instance.getPluginManager().dispatchCommand(instance.getConsole(), command);
             return;
         }
 
-        BungeeCord.getInstance().getScheduler().runAsync(
-            plugin,
-            () -> deltaSender.publish(destServer, RUN_CMD, sender, command));
+        ProxyServer.getInstance().getScheduler().runAsync(
+                plugin,
+                () -> deltaSender.publish(destServer, RUN_CMD, sender, command));
     }
 
     /**
@@ -167,20 +165,22 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(playerName, "playerName");
         Preconditions.checkNotNull(message, "message");
 
-        BungeeCord.getInstance().getScheduler().runAsync(
-            plugin,
-            () ->
-            {
-                CachedPlayer cachedPlayer = deltaSender.getPlayer(playerName);
+        ProxyServer.getInstance().getScheduler().runAsync(
+                plugin,
+                () ->
+                {
+                    CachedPlayer cachedPlayer = deltaSender.getPlayer(playerName);
 
-                if(cachedPlayer == null) { return; }
+                    if (cachedPlayer == null) {
+                        return;
+                    }
 
-                deltaSender.publish(
-                    cachedPlayer.getServer(),
-                    SEND_MESSAGE,
-                    playerName,
-                    message);
-            });
+                    deltaSender.publish(
+                            cachedPlayer.getServer(),
+                            SEND_MESSAGE,
+                            playerName,
+                            message);
+                });
     }
 
     /**
@@ -198,16 +198,16 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(playerName, "playerName");
         Preconditions.checkNotNull(message, "message");
         Preconditions.checkArgument(
-            !server.equals(Servers.BUNGEECORD),
-            "Server set to BUNGEECORD");
+                !server.equals(Servers.BUNGEECORD),
+                "Server set to BUNGEECORD");
 
-        BungeeCord.getInstance().getScheduler().runAsync(
-            plugin,
-            () -> deltaSender.publish(
-                server,
-                SEND_MESSAGE,
-                playerName,
-                message));
+        ProxyServer.getInstance().getScheduler().runAsync(
+                plugin,
+                () -> deltaSender.publish(
+                        server,
+                        SEND_MESSAGE,
+                        playerName,
+                        message));
     }
 
     /**
@@ -235,13 +235,13 @@ public class DeltaRedisApi
         Preconditions.checkNotNull(announcement, "announcement");
         Preconditions.checkNotNull(permission, "permission");
 
-        BungeeCord.getInstance().getScheduler().runAsync(
-            plugin,
-            () -> deltaSender.publish(
-                destServer,
-                SEND_ANNOUNCEMENT,
-                permission,
-                announcement));
+        ProxyServer.getInstance().getScheduler().runAsync(
+                plugin,
+                () -> deltaSender.publish(
+                        destServer,
+                        SEND_ANNOUNCEMENT,
+                        permission,
+                        announcement));
     }
 
     /**
@@ -258,8 +258,7 @@ public class DeltaRedisApi
      */
     static void setup(DeltaRedisCommandSender deltaSender, DeltaRedis plugin)
     {
-        if(instance != null)
-        {
+        if (instance != null) {
             shutdown();
         }
 
@@ -271,8 +270,7 @@ public class DeltaRedisApi
      */
     static void shutdown()
     {
-        if(instance != null)
-        {
+        if (instance != null) {
             instance.deltaSender = null;
             instance.plugin = null;
             instance = null;

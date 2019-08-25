@@ -37,8 +37,7 @@ public class MapCache<K, V extends Cacheable>
 
     public synchronized void put(K key, V value)
     {
-        if(key != null && value != null)
-        {
+        if (key != null && value != null) {
             map.put(key, value);
         }
     }
@@ -48,22 +47,23 @@ public class MapCache<K, V extends Cacheable>
         V value = null;
         long currentTime = System.currentTimeMillis();
 
-        if(key != null)
-        {
+        if (key != null) {
             value = map.get(key);
         }
 
-        if(value != null)
-        {
+        if (value != null) {
             long timeDiff = currentTime - value.getTimeCreatedAt();
             return (timeDiff < invalidValueTime) ? value : null;
+        } else {
+            return null;
         }
-        else { return null; }
     }
 
     public synchronized V remove(K key)
     {
-        if(key == null) { return null; }
+        if (key == null) {
+            return null;
+        }
 
         return map.remove(key);
     }
@@ -78,12 +78,10 @@ public class MapCache<K, V extends Cacheable>
         long currentTime = System.currentTimeMillis();
         Iterator<Map.Entry<K, V>> iter = map.entrySet().iterator();
 
-        while(iter.hasNext())
-        {
+        while (iter.hasNext()) {
             Map.Entry<K, V> entry = iter.next();
             long timeDiff = currentTime - entry.getValue().getTimeCreatedAt();
-            if(timeDiff >= invalidValueTime)
-            {
+            if (timeDiff >= invalidValueTime) {
                 iter.remove();
             }
         }

@@ -78,22 +78,20 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
     @Override
     public void execute(CommandSender sender, String[] args)
     {
-        if(!sender.hasPermission("DeltaRedis.RunCmd"))
-        {
+        if (!sender.hasPermission("DeltaRedis.RunCmd")) {
             sendMessage(sender, format(
-                "NoPerm",
-                "DeltaRedis.RunCmd"));
+                    "NoPerm",
+                    "DeltaRedis.RunCmd"));
             return;
         }
 
-        if(args.length <= 1)
-        {
+        if (args.length <= 1) {
             sendMessage(sender, format(
-                "Usage",
-                "/runcmdbungee server[,server,...] command"));
+                    "Usage",
+                    "/runcmdbungee server[,server,...] command"));
             sendMessage(sender, format(
-                "Usage",
-                "/runcmdbungee ALL command"));
+                    "Usage",
+                    "/runcmdbungee ALL command"));
             return;
         }
 
@@ -103,33 +101,28 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
         String commandStr = joinArgsForCommand(args);
         String senderName = sender.getName();
 
-        if(doesSetContain(argServers, "ALL"))
-        {
+        if (doesSetContain(argServers, "ALL")) {
             deltaApi.sendServerCommand(Servers.SPIGOT, commandStr, senderName);
 
             sendMessage(sender, format(
-                "DeltaRedis.CommandSent",
-                "ALL"));
+                    "DeltaRedis.CommandSent",
+                    "ALL"));
             return;
         }
 
-        for(String dest : argServers)
-        {
+        for (String dest : argServers) {
             String correctedDest = getMatchInSet(servers, dest);
 
-            if(correctedDest != null)
-            {
+            if (correctedDest != null) {
                 deltaApi.sendServerCommand(correctedDest, commandStr, senderName);
 
                 sendMessage(sender, format(
-                    "DeltaRedis.CommandSent",
-                    dest));
-            }
-            else
-            {
+                        "DeltaRedis.CommandSent",
+                        dest));
+            } else {
                 sendMessage(sender, format(
-                    "DeltaRedis.ServerNotFound",
-                    dest));
+                        "DeltaRedis.ServerNotFound",
+                        dest));
             }
         }
     }
@@ -140,14 +133,13 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
         String channel = event.getChannel();
         List<String> messageParts = event.getMessageParts();
 
-        if(channel.equals(DeltaRedisChannels.RUN_CMD))
-        {
+        if (channel.equals(DeltaRedisChannels.RUN_CMD)) {
             String sender = messageParts.get(0);
             String command = messageParts.get(1);
 
             plugin.info("[RunCmd] sendingServer: " + event.getSendingServer() +
-                ", sender: " + sender +
-                ", command: /" + command);
+                    ", sender: " + sender +
+                    ", command: /" + command);
 
             ProxyServer proxy = plugin.getProxy();
             proxy.getPluginManager().dispatchCommand(proxy.getConsole(), command);
@@ -161,10 +153,8 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
 
     private boolean doesSetContain(Set<String> set, String source)
     {
-        for(String item : set)
-        {
-            if(item.equalsIgnoreCase(source))
-            {
+        for (String item : set) {
+            if (item.equalsIgnoreCase(source)) {
                 return true;
             }
         }
@@ -173,10 +163,8 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
 
     private String getMatchInSet(Set<String> set, String source)
     {
-        for(String item : set)
-        {
-            if(item.equalsIgnoreCase(source))
-            {
+        for (String item : set) {
+            if (item.equalsIgnoreCase(source)) {
                 return item;
             }
         }

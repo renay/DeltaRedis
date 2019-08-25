@@ -62,19 +62,17 @@ public class IsOnlineCommand implements CommandExecutor, Registerable, Shutdowna
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
     {
-        if(!sender.hasPermission("DeltaRedis.IsOnline"))
-        {
+        if (!sender.hasPermission("DeltaRedis.IsOnline")) {
             sender.sendMessage(format(
-                "NoPerm",
-                "DeltaRedis.IsOnline"));
+                    "NoPerm",
+                    "DeltaRedis.IsOnline"));
             return true;
         }
 
-        if(args.length < 1)
-        {
+        if (args.length < 1) {
             sender.sendMessage(format(
-                "Usage",
-                "/isonline <name>"));
+                    "Usage",
+                    "/isonline <name>"));
             return true;
         }
 
@@ -83,18 +81,15 @@ public class IsOnlineCommand implements CommandExecutor, Registerable, Shutdowna
 
         DeltaRedisApi.instance().findPlayer(nameToFind, (cachedPlayer) ->
         {
-            if(cachedPlayer != null)
-            {
+            if (cachedPlayer != null) {
                 sendMessage(senderName, format(
-                    "DeltaRedis.PlayerOnlineOnServer",
-                    nameToFind,
-                    cachedPlayer.getServer()));
-            }
-            else
-            {
+                        "DeltaRedis.PlayerOnlineOnServer",
+                        nameToFind,
+                        cachedPlayer.getServer()));
+            } else {
                 sendMessage(senderName, format(
-                    "PlayerOffline",
-                    nameToFind));
+                        "PlayerOffline",
+                        nameToFind));
             }
         });
 
@@ -103,12 +98,9 @@ public class IsOnlineCommand implements CommandExecutor, Registerable, Shutdowna
 
     private void sendMessage(String name, String message)
     {
-        if(name.equalsIgnoreCase("console"))
-        {
+        if (name.equalsIgnoreCase("console")) {
             Bukkit.getConsoleSender().sendMessage(message);
-        }
-        else
-        {
+        } else {
             Player player = Bukkit.getPlayerExact(name);
             player.sendMessage(message);
         }

@@ -145,8 +145,8 @@ public class DeltaRedisCommandSender implements Shutdownable
      * Publishes a string message using Redis PubSub
      * <p>See {@link Servers} for special destination values.</p>
      *
-     * @param dest    Server name that message should go to
-     * @param channel Custom channel name for the message
+     * @param dest         Server name that message should go to
+     * @param channel      Custom channel name for the message
      * @param messageParts String message parts to send
      * @return The number of servers that received the message
      */
@@ -159,8 +159,8 @@ public class DeltaRedisCommandSender implements Shutdownable
      * Publishes a string message using Redis PubSub
      * <p>See {@link Servers} for special destination values.</p>
      *
-     * @param dest    Server name that message should go to
-     * @param channel Custom channel name for the message
+     * @param dest         Server name that message should go to
+     * @param channel      Custom channel name for the message
      * @param messageParts String message parts to send
      * @return The number of servers that received the message
      */
@@ -178,8 +178,7 @@ public class DeltaRedisCommandSender implements Shutdownable
 
         // Add the rest of the message parts
         // Why: {dest, channel, {escaped parts}} vs. {dest, channel, part1, part2, ...}
-        for(String messagePart : messageParts)
-        {
+        for (String messagePart : messageParts) {
             updatedList.add(messagePart);
         }
 
@@ -204,12 +203,16 @@ public class DeltaRedisCommandSender implements Shutdownable
 
         Map<String, String> result = connection.sync().hgetall(getPlayerHashKey(playerName));
 
-        if(result == null) { return null; }
+        if (result == null) {
+            return null;
+        }
 
         String ip = result.get("ip");
         String server = result.get("server");
 
-        if(server == null || ip == null) { return null; }
+        if (server == null || ip == null) {
+            return null;
+        }
 
         return new CachedPlayer(ip, server);
     }

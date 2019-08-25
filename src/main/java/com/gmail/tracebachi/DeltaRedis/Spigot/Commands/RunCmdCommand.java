@@ -75,22 +75,20 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
     {
-        if(!sender.hasPermission("DeltaRedis.RunCmd"))
-        {
+        if (!sender.hasPermission("DeltaRedis.RunCmd")) {
             sender.sendMessage(format(
-                "NoPerm",
-                "DeltaRedis.RunCmd"));
+                    "NoPerm",
+                    "DeltaRedis.RunCmd"));
             return true;
         }
 
-        if(args.length <= 1)
-        {
+        if (args.length <= 1) {
             sender.sendMessage(format(
-                "Usage",
-                "/runcmd server[,server,...] command"));
+                    "Usage",
+                    "/runcmd server[,server,...] command"));
             sender.sendMessage(format(
-                "Usage",
-                "/runcmd ALL command"));
+                    "Usage",
+                    "/runcmd ALL command"));
             return true;
         }
 
@@ -100,48 +98,36 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
         String senderName = sender.getName();
         String commandStr = joinArgsForCommand(args);
 
-        if(doesSetContain(argServers, "BUNGEE"))
-        {
-            if(deltaApi.isBungeeCordOnline())
-            {
+        if (doesSetContain(argServers, "BUNGEE")) {
+            if (deltaApi.isBungeeCordOnline()) {
                 deltaApi.sendServerCommand(Servers.BUNGEECORD, commandStr, senderName);
 
                 sender.sendMessage(format(
-                    "DeltaRedis.CommandSent",
-                    "BUNGEE"));
-            }
-            else
-            {
+                        "DeltaRedis.CommandSent",
+                        "BUNGEE"));
+            } else {
                 sender.sendMessage(format("DeltaRedis.BungeeNotAvailable"));
             }
-        }
-        else if(doesSetContain(argServers, "ALL"))
-        {
+        } else if (doesSetContain(argServers, "ALL")) {
             deltaApi.sendServerCommand(Servers.SPIGOT, commandStr, senderName);
 
             sender.sendMessage(format(
-                "DeltaRedis.CommandSent",
-                "ALL"));
-        }
-        else
-        {
-            for(String dest : argServers)
-            {
+                    "DeltaRedis.CommandSent",
+                    "ALL"));
+        } else {
+            for (String dest : argServers) {
                 String correctedDest = getMatchInSet(servers, dest);
 
-                if(correctedDest != null)
-                {
+                if (correctedDest != null) {
                     deltaApi.sendServerCommand(correctedDest, commandStr, senderName);
 
                     sender.sendMessage(format(
-                        "DeltaRedis.CommandSent",
-                        dest));
-                }
-                else
-                {
+                            "DeltaRedis.CommandSent",
+                            dest));
+                } else {
                     sender.sendMessage(format(
-                        "DeltaRedis.ServerNotFound",
-                        dest));
+                            "DeltaRedis.ServerNotFound",
+                            dest));
                 }
             }
         }
@@ -155,14 +141,13 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
         String channel = event.getChannel();
         List<String> messageParts = event.getMessageParts();
 
-        if(channel.equals(DeltaRedisChannels.RUN_CMD))
-        {
+        if (channel.equals(DeltaRedisChannels.RUN_CMD)) {
             String sender = messageParts.get(0);
             String command = messageParts.get(1);
 
             plugin.info("[RunCmd] sendingServer: " + event.getSendingServer() +
-                ", sender: " + sender +
-                ", command: /" + command);
+                    ", sender: " + sender +
+                    ", command: /" + command);
 
             plugin.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
         }
@@ -175,10 +160,8 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
 
     private boolean doesSetContain(Set<String> set, String source)
     {
-        for(String item : set)
-        {
-            if(item.equalsIgnoreCase(source))
-            {
+        for (String item : set) {
+            if (item.equalsIgnoreCase(source)) {
                 return true;
             }
         }
@@ -187,10 +170,8 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
 
     private String getMatchInSet(Set<String> set, String source)
     {
-        for(String item : set)
-        {
-            if(item.equalsIgnoreCase(source))
-            {
+        for (String item : set) {
+            if (item.equalsIgnoreCase(source)) {
                 return item;
             }
         }

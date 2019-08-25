@@ -53,12 +53,11 @@ public abstract class DelayedHandingEvent<T> extends Event
     {
         Preconditions.checkNotNull(plugin, "plugin");
 
-        synchronized(LOCK)
-        {
+        synchronized (LOCK) {
             Preconditions.checkArgument(!fired, "Event has finished firing");
             Preconditions.checkArgument(
-                !intents.contains(plugin),
-                plugin.getName() + " already registered intent");
+                    !intents.contains(plugin),
+                    plugin.getName() + " already registered intent");
 
             intents.add(plugin);
         }
@@ -73,14 +72,12 @@ public abstract class DelayedHandingEvent<T> extends Event
     {
         Preconditions.checkNotNull(plugin, "plugin");
 
-        synchronized(LOCK)
-        {
+        synchronized (LOCK) {
             Preconditions.checkArgument(
-                intents.remove(plugin),
-                plugin.getName() + " has not registered intent");
+                    intents.remove(plugin),
+                    plugin.getName() + " has not registered intent");
 
-            if(fired && intents.size() == 0)
-            {
+            if (fired && intents.size() == 0) {
                 callback.call((T) this);
             }
         }
@@ -92,14 +89,12 @@ public abstract class DelayedHandingEvent<T> extends Event
      */
     public void postEventCall()
     {
-        synchronized(LOCK)
-        {
+        synchronized (LOCK) {
             Preconditions.checkArgument(fired, "postEventCall() already called");
 
             fired = true;
 
-            if(intents.size() == 0)
-            {
+            if (intents.size() == 0) {
                 callback.call((T) this);
             }
         }

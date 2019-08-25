@@ -68,46 +68,32 @@ public class DeltaRedisChatMessageListener implements Listener, Registerable, Sh
         String channel = event.getChannel();
         List<String> messageParts = event.getMessageParts();
 
-        if(channel.equals(DeltaRedisChannels.SEND_ANNOUNCEMENT))
-        {
+        if (channel.equals(DeltaRedisChannels.SEND_ANNOUNCEMENT)) {
             String permission = messageParts.get(0);
             String[] lines = NEWLINE.split(messageParts.get(1));
 
-            if(permission.equals(""))
-            {
-                for(String line : lines)
-                {
+            if (permission.equals("")) {
+                for (String line : lines) {
                     Bukkit.broadcastMessage(line);
                 }
-            }
-            else
-            {
-                for(String line : lines)
-                {
+            } else {
+                for (String line : lines) {
                     Bukkit.broadcast(line, permission);
                 }
             }
-        }
-        else if(channel.equals(DeltaRedisChannels.SEND_MESSAGE))
-        {
+        } else if (channel.equals(DeltaRedisChannels.SEND_MESSAGE)) {
             String receiverName = messageParts.get(0);
             String[] lines = NEWLINE.split(messageParts.get(1));
 
-            if(receiverName.equalsIgnoreCase("console"))
-            {
-                for(String line : lines)
-                {
+            if (receiverName.equalsIgnoreCase("console")) {
+                for (String line : lines) {
                     Bukkit.getConsoleSender().sendMessage(line);
                 }
-            }
-            else
-            {
+            } else {
                 Player receiver = Bukkit.getPlayerExact(receiverName);
 
-                if(receiver != null)
-                {
-                    for(String line : lines)
-                    {
+                if (receiver != null) {
+                    for (String line : lines) {
                         receiver.sendMessage(line);
                     }
                 }
