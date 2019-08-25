@@ -21,7 +21,7 @@ import com.gmail.tracebachi.DeltaRedis.Shared.Registerable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Shutdownable;
 import com.google.common.base.Preconditions;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
@@ -36,11 +36,11 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.DELTA;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/29/15.
  */
-public class DeltaRedisListener implements Listener, Registerable, Shutdownable
-{
+public class DeltaRedisListener implements Listener, Registerable, Shutdownable {
     private final String bungeeName;
     private StatefulRedisConnection<String, String> connection;
     private HashSet<String> onlinePlayers = new HashSet<>(64);
+    private final ProxyServer proxyServer;
     private DeltaRedis plugin;
 
     public DeltaRedisListener(StatefulRedisConnection<String, String> connection, DeltaRedis plugin)
@@ -48,6 +48,7 @@ public class DeltaRedisListener implements Listener, Registerable, Shutdownable
         this.connection = connection;
         this.plugin = plugin;
         this.bungeeName = plugin.getBungeeName();
+        this.proxyServer = plugin.getProxy();
     }
 
     @Override
@@ -68,8 +69,7 @@ public class DeltaRedisListener implements Listener, Registerable, Shutdownable
         plugin.debug("DeltaRedisListener.shutdown()");
 
         // Remove all players currently online from Redis
-        for(ProxiedPlayer player : BungeeCord.getInstance().getPlayers())
-        {
+        for (ProxiedPlayer player : proxyServer.getPlayers()) {
             setPlayerAsOffline(player.getName());
         }
 
@@ -78,8 +78,7 @@ public class DeltaRedisListener implements Listener, Registerable, Shutdownable
 
         // Handle the case where PlayerDisconnectEvent may not have been called
         // to flush data for players that are no longer online
-        for(String name : onlinePlayers)
-        {
+        for (String name : onlinePlayers) {
             connection.sync().del(bungeeName + ":players:" + name);
         }
 
@@ -136,18 +135,16 @@ public class DeltaRedisListener implements Listener, Registerable, Shutdownable
         String channel = event.getChannel();
         String eventMessage = event.getMessage();
 
-        if(channel.equals(DeltaRedisChannels.RUN_CMD))
-        {
+        if (channel.equals(DeltaRedisChannels.RUN_CMD)) {
             String[] splitMessage = DELTA.split(eventMessage, 2);
             String sender = splitMessage[0];
             String command = splitMessage[1];
 
             plugin.info("[RunCmd] {SendingServer: " + event.getSendingServer() +
-                " , Sender: " + sender +
-                " , Command: /" + command + "}");
+                    " , Sender: " + sender +
+                    " , Command: /" + command + "}");
 
-            BungeeCord instance = BungeeCord.getInstance();
-            instance.getPluginManager().dispatchCommand(instance.getConsole(), command);
+            proxyServer.getPluginManager().dispatchCommand(proxyServer.getConsole(), command);
         }
     }
 
