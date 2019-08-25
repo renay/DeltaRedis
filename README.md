@@ -7,9 +7,9 @@ players. By using DeltaRedis, BungeeCord and servers can communicate, faster and
 
 # APIs
 There are two APIs: 
-[Spigot](https://github.com/GeeItsZee/DeltaRedis/blob/master/src/main/java/com/gmail/tracebachi/DeltaRedis/Spigot/DeltaRedisApi.java)
+[Spigot](https://github.com/renay/DeltaRedis/blob/master/src/main/java/com/gmail/tracebachi/DeltaRedis/Spigot/DeltaRedisApi.java)
 and
-[Bungee](https://github.com/GeeItsZee/DeltaRedis/blob/master/src/main/java/com/gmail/tracebachi/DeltaRedis/Bungee/DeltaRedisApi.java). 
+[Bungee](https://github.com/renay/DeltaRedis/blob/master/src/main/java/com/gmail/tracebachi/DeltaRedis/Bungee/DeltaRedisApi.java). 
 They are similar in structure and use, but it is important to select the appropriate API depending on where your plugin will run.
 
 ## How to include the API with Maven
