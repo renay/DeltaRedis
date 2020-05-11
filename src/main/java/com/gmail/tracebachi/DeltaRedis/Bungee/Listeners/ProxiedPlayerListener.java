@@ -28,6 +28,7 @@ import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -88,7 +89,7 @@ public class ProxiedPlayerListener implements Listener, Registerable, Shutdownab
         ProxiedPlayer player = event.getPlayer();
         String playerName = player.getName();
         String serverName = event.getServer().getInfo().getName();
-        String ip = player.getAddress().toString();
+        String ip = player.getSocketAddress().toString();
 
         Preconditions.checkNotNull(playerName, "playerName");
         Preconditions.checkNotNull(serverName, "serverName");
