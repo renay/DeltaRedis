@@ -35,39 +35,33 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/28/15.
  */
-public class DebugCategoryCommand implements CommandExecutor, Listener, Registerable, Shutdownable
-{
+public class DebugCategoryCommand implements CommandExecutor, Listener, Registerable, Shutdownable {
     private DeltaRedis plugin;
 
-    public DebugCategoryCommand(DeltaRedis plugin)
-    {
+    public DebugCategoryCommand(DeltaRedis plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public void register()
-    {
+    public void register() {
         plugin.getCommand("setdebug").setExecutor(this);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
-    public void unregister()
-    {
+    public void unregister() {
         plugin.getCommand("setdebug").setExecutor(null);
         HandlerList.unregisterAll(this);
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         unregister();
         plugin = null;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
-    {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!sender.hasPermission("DeltaRedis.DebugCategory")) {
             sender.sendMessage(format(
                     "NoPerm",
@@ -126,8 +120,7 @@ public class DebugCategoryCommand implements CommandExecutor, Listener, Register
     }
 
     @EventHandler
-    public void onDebugCategoryChange(DebugCategoryChangeEvent event)
-    {
+    public void onDebugCategoryChange(DebugCategoryChangeEvent event) {
         String debugCategory = event.getDebugCategory();
 
         if (debugCategory.equalsIgnoreCase("DeltaRedis")) {

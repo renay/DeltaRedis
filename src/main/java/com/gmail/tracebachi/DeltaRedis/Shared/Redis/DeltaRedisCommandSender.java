@@ -29,8 +29,7 @@ import java.util.*;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedisCommandSender implements Shutdownable
-{
+public class DeltaRedisCommandSender implements Shutdownable {
     private final String serverName;
     private final String bungeeName;
     private final String serverSetKey;
@@ -43,8 +42,7 @@ public class DeltaRedisCommandSender implements Shutdownable
     private Set<String> cachedPlayers;
 
     public DeltaRedisCommandSender(StatefulRedisConnection<String, String> connection,
-                                   DeltaRedisInterface plugin)
-    {
+                                   DeltaRedisInterface plugin) {
         this.connection = connection;
         this.plugin = plugin;
         this.bungeeName = plugin.getBungeeName();
@@ -56,8 +54,7 @@ public class DeltaRedisCommandSender implements Shutdownable
     /**
      * Sets up by adding the server to Redis.
      */
-    public synchronized void setup()
-    {
+    public synchronized void setup() {
         plugin.debug("DeltaRedisCommandSender.setup()");
         connection.sync().sadd(serverSetKey, serverName);
     }
@@ -66,8 +63,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * Shuts down by removing the server from Redis.
      */
     @Override
-    public synchronized void shutdown()
-    {
+    public synchronized void shutdown() {
         plugin.debug("DeltaRedisCommandSender.shutdown()");
 
         connection.sync().srem(serverSetKey, serverName);
@@ -79,8 +75,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @return An unmodifiable set of servers that are part of the same
      * BungeeCord (from Redis)
      */
-    public synchronized Set<String> getServers()
-    {
+    public synchronized Set<String> getServers() {
         plugin.debug("DeltaRedisCommandSender.getServers()");
 
         Set<String> result = connection.sync().smembers(serverSetKey);
@@ -94,8 +89,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @return An unmodifiable set of servers that are part of the same
      * BungeeCord (from last call to {@link #getServers()})
      */
-    public Set<String> getCachedServers()
-    {
+    public Set<String> getCachedServers() {
         return cachedServers;
     }
 
@@ -103,8 +97,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @return True if the BungeeCord instance was last known to be online
      * or false
      */
-    public boolean isBungeeCordOnline()
-    {
+    public boolean isBungeeCordOnline() {
         return isBungeeCordOnline;
     }
 
@@ -112,8 +105,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @return An unmodifiable set of player names that are part of the
      * same BungeeCord (from Redis)
      */
-    public synchronized Set<String> getPlayers()
-    {
+    public synchronized Set<String> getPlayers() {
         plugin.debug("DeltaRedisCommandSender.getPlayers()");
 
         cachedPlayers = Collections.unmodifiableSet(connection.sync().smembers(playerSetKey));
@@ -124,8 +116,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @return True if the player set was removed from Redis or false
      * <p>This method does not remove individual player hashes.</p>
      */
-    public synchronized boolean removePlayers()
-    {
+    public synchronized boolean removePlayers() {
         plugin.debug("DeltaRedisCommandSender.removePlayers()");
 
         cachedPlayers = Collections.emptySet();
@@ -136,8 +127,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @return An unmodifiable set of player names that are part of the
      * same BungeeCord (from last call to {@link #getPlayers()})
      */
-    public Set<String> getCachedPlayers()
-    {
+    public Set<String> getCachedPlayers() {
         return cachedPlayers;
     }
 
@@ -150,8 +140,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @param messageParts String message parts to send
      * @return The number of servers that received the message
      */
-    public synchronized long publish(String dest, String channel, String... messageParts)
-    {
+    public synchronized long publish(String dest, String channel, String... messageParts) {
         return publish(dest, channel, Arrays.asList(messageParts));
     }
 
@@ -164,8 +153,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @param messageParts String message parts to send
      * @return The number of servers that received the message
      */
-    public synchronized long publish(String dest, String channel, List<String> messageParts)
-    {
+    public synchronized long publish(String dest, String channel, List<String> messageParts) {
         plugin.debug("DeltaRedisCommandSender.publish()");
 
         Preconditions.checkNotNull(dest, "dest");
@@ -194,8 +182,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      * @param playerName Name of the player to find
      * @return CachedPlayer if found and null if not
      */
-    public synchronized CachedPlayer getPlayer(String playerName)
-    {
+    public synchronized CachedPlayer getPlayer(String playerName) {
         Preconditions.checkNotNull(playerName, "playerName");
 
         playerName = playerName.toLowerCase();
@@ -222,8 +209,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      *
      * @param playerName Name of the player to remove
      */
-    public synchronized void removePlayer(String playerName)
-    {
+    public synchronized void removePlayer(String playerName) {
         Preconditions.checkNotNull(playerName, "playerName");
 
         playerName = playerName.toLowerCase();
@@ -238,8 +224,7 @@ public class DeltaRedisCommandSender implements Shutdownable
      *
      * @param playerName Name of the player to update
      */
-    public synchronized void updatePlayer(String playerName, Map<String, String> newValues)
-    {
+    public synchronized void updatePlayer(String playerName, Map<String, String> newValues) {
         Preconditions.checkNotNull(playerName, "playerName");
         Preconditions.checkNotNull(newValues, "newValues");
 
@@ -249,8 +234,7 @@ public class DeltaRedisCommandSender implements Shutdownable
         connection.sync().hmset(getPlayerHashKey(playerName), newValues);
     }
 
-    private String getPlayerHashKey(String playerName)
-    {
+    private String getPlayerHashKey(String playerName) {
         return bungeeName + ":players:" + playerName;
     }
 }

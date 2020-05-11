@@ -24,8 +24,7 @@ import java.text.MessageFormat;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/11/16.
  */
-public class ChatMessageHelper
-{
+public class ChatMessageHelper {
     private static ChatMessageHelper instance;
 
     private CaseInsensitiveHashMap<MessageFormat> formatMap = new CaseInsensitiveHashMap<>();
@@ -33,8 +32,7 @@ public class ChatMessageHelper
     /**
      * @return Singleton instance of the ChatMessageHelper
      */
-    public static ChatMessageHelper instance()
-    {
+    public static ChatMessageHelper instance() {
         if (instance == null) {
             instance = new ChatMessageHelper();
         }
@@ -51,8 +49,7 @@ public class ChatMessageHelper
      * @return Formatted string or string indicating that the format was not
      * found
      */
-    public static String format(String formatName, String... arguments)
-    {
+    public static String format(String formatName, String... arguments) {
         Preconditions.checkNotNull(formatName, "formatName");
         Preconditions.checkNotNull(arguments, "arguments");
 
@@ -75,8 +72,7 @@ public class ChatMessageHelper
      * @param permission String to format
      * @return Formatted string
      */
-    public static String formatNoPerm(String permission)
-    {
+    public static String formatNoPerm(String permission) {
         return format("DeltaRedis.NoPerm", permission);
     }
 
@@ -86,8 +82,7 @@ public class ChatMessageHelper
      * @param usageString String to format
      * @return Formatted string
      */
-    public static String formatUsage(String usageString)
-    {
+    public static String formatUsage(String usageString) {
         return format("DeltaRedis.Usage", usageString);
     }
 
@@ -97,8 +92,7 @@ public class ChatMessageHelper
      * @param command String to format
      * @return Formatted string
      */
-    public static String formatPlayerOnlyCommand(String command)
-    {
+    public static String formatPlayerOnlyCommand(String command) {
         return format("DeltaRedis.PlayerOnlyCommand", command);
     }
 
@@ -108,8 +102,7 @@ public class ChatMessageHelper
      * @param name String to format
      * @return Formatted string
      */
-    public static String formatPlayerOffline(String name)
-    {
+    public static String formatPlayerOffline(String name) {
         return format("DeltaRedis.PlayerOffline", name);
     }
 
@@ -120,8 +113,7 @@ public class ChatMessageHelper
      * @param format     String representation of the format like the one
      *                   that would be used in {@link MessageFormat}
      */
-    public void updateFormat(String formatName, String format)
-    {
+    public void updateFormat(String formatName, String format) {
         Preconditions.checkNotNull(formatName, "formatName");
         Preconditions.checkNotNull(format, "format");
         formatMap.put(formatName, new MessageFormat(format));
@@ -133,14 +125,12 @@ public class ChatMessageHelper
      * @param formatName Name of the format to update
      * @return True if removed or false
      */
-    public boolean removeFormat(String formatName)
-    {
+    public boolean removeFormat(String formatName) {
         Preconditions.checkNotNull(formatName, "formatName");
         return formatMap.remove(formatName) != null;
     }
 
-    private ChatMessageHelper()
-    {
+    private ChatMessageHelper() {
 
     }
 }

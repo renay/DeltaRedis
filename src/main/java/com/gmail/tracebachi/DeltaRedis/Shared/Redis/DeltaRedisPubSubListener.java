@@ -26,18 +26,15 @@ import java.util.List;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedisPubSubListener implements RedisPubSubListener<String, String>, Shutdownable
-{
+public class DeltaRedisPubSubListener implements RedisPubSubListener<String, String>, Shutdownable {
     private DeltaRedisInterface plugin;
 
-    public DeltaRedisPubSubListener(DeltaRedisInterface plugin)
-    {
+    public DeltaRedisPubSubListener(DeltaRedisInterface plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         this.plugin = null;
     }
 
@@ -47,8 +44,7 @@ public class DeltaRedisPubSubListener implements RedisPubSubListener<String, Str
      * @param channel         Ignored as the listener is only registered to explicit channels
      * @param completeMessage Complete received message
      */
-    public void message(String channel, String completeMessage)
-    {
+    public void message(String channel, String completeMessage) {
         try {
             List<String> publishedMessageParts = EscapeAndDelimiterUtil
                     .DELTA_SEPARATED
@@ -68,8 +64,7 @@ public class DeltaRedisPubSubListener implements RedisPubSubListener<String, Str
      * @param channel Channel that the listener was registered to
      * @param count   Number of other listeners (on that Redis instance) on the channel
      */
-    public void subscribed(String channel, long count)
-    {
+    public void subscribed(String channel, long count) {
         plugin.debug("Listener subscribed to channel: " + channel);
     }
 
@@ -77,29 +72,25 @@ public class DeltaRedisPubSubListener implements RedisPubSubListener<String, Str
      * @param channel Channel that the listener was unregistered from
      * @param count   Number of other listeners (on that Redis instance) on the channel
      */
-    public void unsubscribed(String channel, long count)
-    {
+    public void unsubscribed(String channel, long count) {
         plugin.debug("Listener unsubscribed from channel: " + channel);
     }
 
     /**
      * This method handles pattern matched messages, but is unused.
      */
-    public void message(String pattern, String channel, String message)
-    {
+    public void message(String pattern, String channel, String message) {
     }
 
     /**
      * This method handles pattern subscription, but is unused.
      */
-    public void psubscribed(String pattern, long count)
-    {
+    public void psubscribed(String pattern, long count) {
     }
 
     /**
      * This method handles pattern unsubscription, but is unused.
      */
-    public void punsubscribed(String pattern, long count)
-    {
+    public void punsubscribed(String pattern, long count) {
     }
 }

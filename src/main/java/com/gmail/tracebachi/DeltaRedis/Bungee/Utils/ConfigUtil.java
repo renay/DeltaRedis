@@ -24,8 +24,7 @@ import java.io.*;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/10/15.
  */
-public interface ConfigUtil
-{
+public interface ConfigUtil {
     /**
      * Loads the resource from the JAR and saves it to the destination under the plugin's
      * data folder. By default, the destination file will not be replaced if it exists.
@@ -35,8 +34,7 @@ public interface ConfigUtil
      * @param destinationName Filename of the destination
      * @return Destination File
      */
-    static File saveResource(Plugin plugin, String resourceName, String destinationName)
-    {
+    static File saveResource(Plugin plugin, String resourceName, String destinationName) {
         return saveResource(plugin, resourceName, destinationName, false);
     }
 
@@ -47,8 +45,7 @@ public interface ConfigUtil
      * Originally authored by: vemacs, Feb 15, 2014
      */
     static File saveResource(Plugin plugin, String resourceName, String destinationName,
-                             boolean replace)
-    {
+                             boolean replace) {
         File folder = plugin.getDataFolder();
 
         if (!folder.exists() && !folder.mkdir()) {

@@ -23,8 +23,7 @@ import org.bukkit.event.HandlerList;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/14/16.
  */
-public class DebugCategoryChangeEvent extends Event
-{
+public class DebugCategoryChangeEvent extends Event {
     private final String debugCategory;
     private final boolean enable;
     private boolean forwardToBungee;
@@ -36,8 +35,7 @@ public class DebugCategoryChangeEvent extends Event
      * @param enable        True if the user requested the debug category
      *                      to be enable or false
      */
-    public DebugCategoryChangeEvent(String debugCategory, boolean enable)
-    {
+    public DebugCategoryChangeEvent(String debugCategory, boolean enable) {
         Preconditions.checkNotNull(debugCategory, "debugCategory");
         Preconditions.checkArgument(!debugCategory.isEmpty(), "Empty debugCategory");
 
@@ -50,8 +48,7 @@ public class DebugCategoryChangeEvent extends Event
      * <p>Shared category strings may mean multiple will assume a change is
      * for them when it is not.</p>
      */
-    public String getDebugCategory()
-    {
+    public String getDebugCategory() {
         return debugCategory;
     }
 
@@ -59,16 +56,14 @@ public class DebugCategoryChangeEvent extends Event
      * @return True if the user requested the debug category to be
      * enable or disabled
      */
-    public boolean shouldEnable()
-    {
+    public boolean shouldEnable() {
         return enable;
     }
 
     /**
      * @return True if the event should be forwarded to Bungee as well
      */
-    public boolean shouldForwardToBungee()
-    {
+    public boolean shouldForwardToBungee() {
         return forwardToBungee;
     }
 
@@ -76,8 +71,7 @@ public class DebugCategoryChangeEvent extends Event
      * @param forwardToBungee Set to true if the event should be forwarded
      *                        to Bungee or false to prevent it
      */
-    public void setForwardToBungee(boolean forwardToBungee)
-    {
+    public void setForwardToBungee(boolean forwardToBungee) {
         this.forwardToBungee = forwardToBungee;
     }
 
@@ -86,16 +80,14 @@ public class DebugCategoryChangeEvent extends Event
     /**
      * Used by the Bukkit/Spigot event system
      */
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
     /**
      * Used by the Bukkit/Spigot event system
      */
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

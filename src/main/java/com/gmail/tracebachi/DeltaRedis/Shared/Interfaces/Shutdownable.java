@@ -19,8 +19,7 @@ package com.gmail.tracebachi.DeltaRedis.Shared.Interfaces;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 1/22/16.
  */
-public interface Shutdownable
-{
+public interface Shutdownable {
     /**
      * This method clears all internal, owned data structures, nullifies references, and
      * performs all functions necessary to cleanup the object making it unusable after

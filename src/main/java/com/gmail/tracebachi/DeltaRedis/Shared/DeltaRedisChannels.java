@@ -19,8 +19,7 @@ package com.gmail.tracebachi.DeltaRedis.Shared;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 1/21/16.
  */
-public interface DeltaRedisChannels
-{
+public interface DeltaRedisChannels {
     /**
      * Channel for sending messages to a single player on a different server
      */

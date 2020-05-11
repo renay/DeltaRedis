@@ -44,8 +44,7 @@ import java.util.List;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
-{
+public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
     private boolean debugEnabled;
     private int updatePeriod;
     private String bungeeName;
@@ -63,14 +62,12 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
     private StatefulRedisConnection<String, String> commandConn;
 
     @Override
-    public void onLoad()
-    {
+    public void onLoad() {
         saveDefaultConfig();
     }
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         info("-----------------------------------------------------------------");
         info("[IMPORTANT] Please make sure that \'ServerName\' is *exactly* the");
         info("[IMPORTANT] same as your BungeeCord config for this server.");
@@ -109,8 +106,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
     }
 
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         getServer().getScheduler().cancelTasks(this);
 
         DeltaRedisApi.shutdown();
@@ -146,14 +142,12 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
         resources = null;
     }
 
-    public void setDebugEnabled(boolean debugEnabled)
-    {
+    public void setDebugEnabled(boolean debugEnabled) {
         this.debugEnabled = debugEnabled;
     }
 
     @Override
-    public void onRedisMessageEvent(List<String> allMessageParts)
-    {
+    public void onRedisMessageEvent(List<String> allMessageParts) {
         Preconditions.checkNotNull(allMessageParts, "allMessageParts");
         Preconditions.checkArgument(
                 allMessageParts.size() >= 2,
@@ -173,8 +167,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
     @Override
     public void onRedisMessageEvent(String sendingServer,
                                     String channel,
-                                    List<String> messageParts)
-    {
+                                    List<String> messageParts) {
         Preconditions.checkNotNull(sendingServer, "sendingServer");
         Preconditions.checkNotNull(channel, "channel");
         Preconditions.checkNotNull(messageParts, "messageParts");
@@ -188,39 +181,33 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
     }
 
     @Override
-    public String getBungeeName()
-    {
+    public String getBungeeName() {
         return bungeeName;
     }
 
     @Override
-    public String getServerName()
-    {
+    public String getServerName() {
         return serverName;
     }
 
     @Override
-    public void info(String message)
-    {
+    public void info(String message) {
         getLogger().info(message);
     }
 
     @Override
-    public void severe(String message)
-    {
+    public void severe(String message) {
         getLogger().severe(message);
     }
 
     @Override
-    public void debug(String message)
-    {
+    public void debug(String message) {
         if (debugEnabled) {
             getLogger().info("[Debug] " + message);
         }
     }
 
-    private void readConfig(ConfigurationSection configuration)
-    {
+    private void readConfig(ConfigurationSection configuration) {
         Preconditions.checkNotNull(configuration, "configuration");
 
         debugEnabled = configuration.getBoolean("Debug", false);
@@ -242,8 +229,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
         }
     }
 
-    private String getRedisUri(ConfigurationSection config)
-    {
+    private String getRedisUri(ConfigurationSection config) {
         String url = config.getString("RedisServer.URL");
         String port = config.getString("RedisServer.Port");
         String password = config.getString("RedisServer.Password");
@@ -258,8 +244,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface
         }
     }
 
-    private void setupRedis(ConfigurationSection configuration)
-    {
+    private void setupRedis(ConfigurationSection configuration) {
         resources = new DefaultClientResources
                 .Builder()
                 .ioThreadPoolSize(3)

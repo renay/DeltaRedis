@@ -34,33 +34,28 @@ import java.util.HashSet;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/29/15.
  */
-public class ProxiedPlayerListener implements Listener, Registerable, Shutdownable
-{
+public class ProxiedPlayerListener implements Listener, Registerable, Shutdownable {
     private final HashSet<String> onlinePlayers = new HashSet<>(64);
     private DeltaRedisCommandSender commandSender;
     private DeltaRedis plugin;
 
-    public ProxiedPlayerListener(DeltaRedisCommandSender commandSender, DeltaRedis plugin)
-    {
+    public ProxiedPlayerListener(DeltaRedisCommandSender commandSender, DeltaRedis plugin) {
         this.commandSender = commandSender;
         this.plugin = plugin;
     }
 
     @Override
-    public void register()
-    {
+    public void register() {
         plugin.getProxy().getPluginManager().registerListener(plugin, this);
     }
 
     @Override
-    public void unregister()
-    {
+    public void unregister() {
         plugin.getProxy().getPluginManager().unregisterListener(this);
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             commandSender.removePlayer(player.getName());
         }
@@ -89,8 +84,7 @@ public class ProxiedPlayerListener implements Listener, Registerable, Shutdownab
      * </p>
      */
     @EventHandler
-    public void onServerConnectedEvent(ServerConnectedEvent event)
-    {
+    public void onServerConnectedEvent(ServerConnectedEvent event) {
         ProxiedPlayer player = event.getPlayer();
         String playerName = player.getName();
         String serverName = event.getServer().getInfo().getName();
@@ -117,8 +111,7 @@ public class ProxiedPlayerListener implements Listener, Registerable, Shutdownab
      * </p>
      */
     @EventHandler
-    public void onPlayerLeaveProxy(PlayerDisconnectEvent event)
-    {
+    public void onPlayerLeaveProxy(PlayerDisconnectEvent event) {
         String playerName = event.getPlayer().getName();
 
         commandSender.removePlayer(playerName);

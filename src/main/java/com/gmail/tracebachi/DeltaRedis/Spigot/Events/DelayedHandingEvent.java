@@ -27,8 +27,7 @@ import java.util.Set;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/17/16.
  */
-public abstract class DelayedHandingEvent<T> extends Event
-{
+public abstract class DelayedHandingEvent<T> extends Event {
     private final Set<Plugin> intents = new HashSet<>();
     private final Callback<T> callback;
     private final Object LOCK = new Object();
@@ -38,8 +37,7 @@ public abstract class DelayedHandingEvent<T> extends Event
     /**
      * @param callback Callback to call when there are no intents left
      */
-    public DelayedHandingEvent(Callback<T> callback)
-    {
+    public DelayedHandingEvent(Callback<T> callback) {
         Preconditions.checkNotNull(callback, "callback");
         this.callback = callback;
     }
@@ -49,8 +47,7 @@ public abstract class DelayedHandingEvent<T> extends Event
      *
      * @param plugin Plugin to register intent with
      */
-    public void registerIntent(Plugin plugin)
-    {
+    public void registerIntent(Plugin plugin) {
         Preconditions.checkNotNull(plugin, "plugin");
 
         synchronized (LOCK) {
@@ -68,8 +65,7 @@ public abstract class DelayedHandingEvent<T> extends Event
      *
      * @param plugin Plugin to complete intent with
      */
-    public void completeIntent(Plugin plugin)
-    {
+    public void completeIntent(Plugin plugin) {
         Preconditions.checkNotNull(plugin, "plugin");
 
         synchronized (LOCK) {
@@ -87,8 +83,7 @@ public abstract class DelayedHandingEvent<T> extends Event
      * Should be called by the method calling the event when the event
      * has finished firing
      */
-    public void postEventCall()
-    {
+    public void postEventCall() {
         synchronized (LOCK) {
             Preconditions.checkArgument(fired, "postEventCall() already called");
 

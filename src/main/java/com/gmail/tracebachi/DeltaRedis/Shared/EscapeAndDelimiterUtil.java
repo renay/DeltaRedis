@@ -24,8 +24,7 @@ import java.util.List;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/10/16.
  */
-public class EscapeAndDelimiterUtil
-{
+public class EscapeAndDelimiterUtil {
     public static final EscapeAndDelimiterUtil DELTA_SEPARATED =
             new EscapeAndDelimiterUtil('\u0394', '\\');
     public static final EscapeAndDelimiterUtil COMMA_SEPARATED =
@@ -40,8 +39,7 @@ public class EscapeAndDelimiterUtil
      * @param delimiter  Character for delimiting strings
      * @param escapeChar Character for escaping special characters
      */
-    public EscapeAndDelimiterUtil(char delimiter, char escapeChar)
-    {
+    public EscapeAndDelimiterUtil(char delimiter, char escapeChar) {
         Preconditions.checkArgument(
                 delimiter != escapeChar,
                 "Delimiter and escape character cannot be the same");
@@ -63,8 +61,7 @@ public class EscapeAndDelimiterUtil
      * @param input List of strings to escape and delimit
      * @return Escaped and delimited string
      */
-    public String escapeAndDelimit(List<String> input)
-    {
+    public String escapeAndDelimit(List<String> input) {
         Preconditions.checkNotNull(input, "input");
 
         StringBuilder builder = new StringBuilder(256);
@@ -102,8 +99,7 @@ public class EscapeAndDelimiterUtil
      * @param input Properly escaped and delimited string
      * @return Unescaped and undelimited strings in a list
      */
-    public List<String> unescapeAndUndelimit(String input)
-    {
+    public List<String> unescapeAndUndelimit(String input) {
         Preconditions.checkNotNull(input, "input");
 
         List<String> result = new ArrayList<>(4);
@@ -217,8 +213,7 @@ public class EscapeAndDelimiterUtil
         return result;
     }
 
-    private String getStringAndClear(StringBuilder builder)
-    {
+    private String getStringAndClear(StringBuilder builder) {
         String result = builder.toString();
         builder.setLength(0);
         return result;

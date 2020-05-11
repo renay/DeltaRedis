@@ -27,14 +27,12 @@ import java.util.List;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedisMessageEvent extends Event
-{
+public class DeltaRedisMessageEvent extends Event {
     private final String sendingServer;
     private final String channel;
     private final List<String> messageParts;
 
-    public DeltaRedisMessageEvent(String sendingServer, String channel, List<String> messageParts)
-    {
+    public DeltaRedisMessageEvent(String sendingServer, String channel, List<String> messageParts) {
         Preconditions.checkNotNull(sendingServer, "sendingServer");
         Preconditions.checkNotNull(channel, "channel");
         Preconditions.checkNotNull(messageParts, "messageParts");
@@ -49,32 +47,28 @@ public class DeltaRedisMessageEvent extends Event
     /**
      * @return Name of the server that sent the message.
      */
-    public String getSendingServer()
-    {
+    public String getSendingServer() {
         return sendingServer;
     }
 
     /**
      * @return Name of the channel that the message is targeted at.
      */
-    public String getChannel()
-    {
+    public String getChannel() {
         return channel;
     }
 
     /**
      * @return The message parts/data received.
      */
-    public List<String> getMessageParts()
-    {
+    public List<String> getMessageParts() {
         return messageParts;
     }
 
     /**
      * @return True if the message was sent by the current server or false
      */
-    public boolean isSendingServerSelf()
-    {
+    public boolean isSendingServerSelf() {
         return DeltaRedisApi.instance().getServerName().equals(sendingServer);
     }
 
@@ -82,8 +76,7 @@ public class DeltaRedisMessageEvent extends Event
      * @return Comma separated string of the sendingServer, channel, and message.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "(" + sendingServer + ", " + channel + ", " + String.join(", ", messageParts) + ")";
     }
 
@@ -92,16 +85,14 @@ public class DeltaRedisMessageEvent extends Event
     /**
      * Used by the Bukkit/Spigot event system
      */
-    public HandlerList getHandlers()
-    {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
     /**
      * Used by the Bukkit/Spigot event system
      */
-    public static HandlerList getHandlerList()
-    {
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 }

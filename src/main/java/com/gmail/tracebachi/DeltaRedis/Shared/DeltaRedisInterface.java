@@ -21,8 +21,7 @@ import java.util.List;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/27/15.
  */
-public interface DeltaRedisInterface
-{
+public interface DeltaRedisInterface {
     /**
      * Handles a DeltaRedis message sent to the server
      *

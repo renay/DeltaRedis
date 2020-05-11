@@ -19,8 +19,7 @@ package com.gmail.tracebachi.DeltaRedis.Shared.Interfaces;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 1/25/16.
  */
-public interface Registerable
-{
+public interface Registerable {
     /**
      * Registers a command or listener
      */

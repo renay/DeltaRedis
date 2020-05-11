@@ -20,8 +20,7 @@ package com.gmail.tracebachi.DeltaRedis.Shared.Interfaces;
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/17/16.
  */
 @FunctionalInterface
-public interface Callback<T>
-{
+public interface Callback<T> {
     /**
      * Method to call when operation is completed
      *

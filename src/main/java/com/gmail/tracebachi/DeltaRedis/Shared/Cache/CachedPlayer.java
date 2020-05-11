@@ -19,14 +19,12 @@ package com.gmail.tracebachi.DeltaRedis.Shared.Cache;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class CachedPlayer implements Cacheable
-{
+public class CachedPlayer implements Cacheable {
     private final String ip;
     private final String server;
     private final long timeCreatedAt;
 
-    public CachedPlayer(String ip, String server)
-    {
+    public CachedPlayer(String ip, String server) {
         this.ip = ip;
         this.server = server;
         this.timeCreatedAt = System.currentTimeMillis();
@@ -36,24 +34,21 @@ public class CachedPlayer implements Cacheable
      * @return Time in milliseconds when this {@link CachedPlayer} was created
      */
     @Override
-    public long getTimeCreatedAt()
-    {
+    public long getTimeCreatedAt() {
         return timeCreatedAt;
     }
 
     /**
      * @return IP address of the player recorded by BungeeCord
      */
-    public String getIp()
-    {
+    public String getIp() {
         return ip;
     }
 
     /**
      * @return The last known server the player was on
      */
-    public String getServer()
-    {
+    public String getServer() {
         return server;
     }
 }

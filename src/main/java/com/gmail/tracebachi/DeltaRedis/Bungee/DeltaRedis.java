@@ -51,8 +51,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedis extends Plugin implements DeltaRedisInterface
-{
+public class DeltaRedis extends Plugin implements DeltaRedisInterface {
     private boolean debugEnabled;
     private String bungeeName;
     private DeltaRedisCommandSender commandSender;
@@ -67,14 +66,12 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface
     private StatefulRedisConnection<String, String> commandConn;
 
     @Override
-    public void onEnable()
-    {
+    public void onEnable() {
         info("-----------------------------------------------------------------");
         info("[IMPORTANT] Please verify that all Spigot servers are configured");
         info("[IMPORTANT] with their correct cased name. For example: ");
         info("[IMPORTANT] \'World\' is not the same as \'world\'");
-        for(Map.Entry<String, ServerInfo> entry : getProxy().getServers().entrySet())
-        {
+        for (Map.Entry<String, ServerInfo> entry : getProxy().getServers().entrySet()) {
             info("[IMPORTANT] Case-sensitive server name: " + entry.getValue().getName());
         }
         info("-----------------------------------------------------------------");
@@ -96,8 +93,7 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface
 
         getProxy().getScheduler().schedule(this, () ->
         {
-            if(commandSender != null)
-            {
+            if (commandSender != null) {
                 commandSender.getServers();
                 commandSender.getPlayers();
             }
@@ -105,8 +101,7 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface
     }
 
     @Override
-    public void onDisable()
-    {
+    public void onDisable() {
         getProxy().getScheduler().cancel(this);
 
         DeltaRedisApi.shutdown();
@@ -139,25 +134,22 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface
         resources = null;
     }
 
-    public void setDebugEnabled(boolean debugEnabled)
-    {
+    public void setDebugEnabled(boolean debugEnabled) {
         this.debugEnabled = debugEnabled;
     }
 
     @Override
-    public void onRedisMessageEvent(List<String> allMessageParts)
-    {
+    public void onRedisMessageEvent(List<String> allMessageParts) {
         Preconditions.checkNotNull(allMessageParts, "allMessageParts");
         Preconditions.checkArgument(
-            allMessageParts.size() >= 2,
-            "Less than expected number of parts in message");
+                allMessageParts.size() >= 2,
+                "Less than expected number of parts in message");
 
         String sendingServer = allMessageParts.get(0);
         String channel = allMessageParts.get(1);
         List<String> eventMessageParts = new ArrayList<>(allMessageParts.size() - 2);
 
-        for(int i = 2; i < allMessageParts.size(); i++)
-        {
+        for (int i = 2; i < allMessageParts.size(); i++) {
             eventMessageParts.add(allMessageParts.get(i));
         }
 
@@ -167,83 +159,73 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface
     @Override
     public void onRedisMessageEvent(String sendingServer,
                                     String channel,
-                                    List<String> messageParts)
-    {
+                                    List<String> messageParts) {
         Preconditions.checkNotNull(sendingServer, "sendingServer");
         Preconditions.checkNotNull(channel, "channel");
         Preconditions.checkNotNull(messageParts, "messageParts");
 
         DeltaRedisMessageEvent event = new DeltaRedisMessageEvent(
-            sendingServer,
-            channel,
-            messageParts);
+                sendingServer,
+                channel,
+                messageParts);
 
         getProxy().getPluginManager().callEvent(event);
     }
 
     @Override
-    public String getBungeeName()
-    {
+    public String getBungeeName() {
         return bungeeName;
     }
 
     @Override
-    public String getServerName()
-    {
+    public String getServerName() {
         return Servers.BUNGEECORD;
     }
 
     @Override
-    public void info(String message)
-    {
+    public void info(String message) {
         getLogger().info(message);
     }
 
     @Override
-    public void severe(String message)
-    {
+    public void severe(String message) {
         getLogger().severe(message);
     }
 
     @Override
-    public void debug(String message)
-    {
-        if(debugEnabled)
-        {
+    public void debug(String message) {
+        if (debugEnabled) {
             getLogger().info("[Debug] " + message);
         }
     }
 
-    private Configuration loadConfig()
-    {
-        try
-        {
+    private Configuration loadConfig() {
+        try {
             File file = ConfigUtil.saveResource(
-                this,
-                "bungee-config.yml",
-                "config.yml");
+                    this,
+                    "bungee-config.yml",
+                    "config.yml");
             Configuration config = ConfigurationProvider
-                .getProvider(YamlConfiguration.class)
-                .load(file);
+                    .getProvider(YamlConfiguration.class)
+                    .load(file);
 
-            if(config != null) { return config; }
+            if (config != null) {
+                return config;
+            }
 
             ConfigUtil.saveResource(
-                this,
-                "bungee-config.yml",
-                "config-example.yml",
-                true);
+                    this,
+                    "bungee-config.yml",
+                    "config-example.yml",
+                    true);
 
             throw new RuntimeException("Failed to load configuration file");
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to load configuration file", e);
         }
     }
 
-    private void readConfig(Configuration configuration)
-    {
+    private void readConfig(Configuration configuration) {
         Preconditions.checkNotNull(configuration, "configuration");
 
         debugEnabled = configuration.getBoolean("Debug", false);
@@ -252,20 +234,17 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface
         Preconditions.checkNotNull(bungeeName, "bungeeName");
 
         Configuration formatsSection = configuration.getSection("Formats");
-        for(String key : formatsSection.getKeys())
-        {
+        for (String key : formatsSection.getKeys()) {
             String value = formatsSection.getString(key);
-            if(value != null)
-            {
+            if (value != null) {
                 String translatedFormat = ChatColor
-                    .translateAlternateColorCodes('&', value);
+                        .translateAlternateColorCodes('&', value);
                 ChatMessageHelper.instance().updateFormat("DeltaRedis." + key, translatedFormat);
             }
         }
     }
 
-    private String getRedisUri(Configuration config)
-    {
+    private String getRedisUri(Configuration config) {
         String url = config.getString("RedisServer.URL");
         String port = config.getString("RedisServer.Port");
         String password = config.getString("RedisServer.Password");
@@ -273,23 +252,19 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface
         Preconditions.checkNotNull(url, "RedisServer.URL");
         Preconditions.checkNotNull(port, "RedisServer.Port");
 
-        if(password != null)
-        {
+        if (password != null) {
             return "redis://" + password + '@' + url + ':' + port;
-        }
-        else
-        {
+        } else {
             return "redis://" + url + ':' + port;
         }
     }
 
-    private void setupRedis(Configuration configuration)
-    {
+    private void setupRedis(Configuration configuration) {
         resources = new DefaultClientResources
-            .Builder()
-            .ioThreadPoolSize(3)
-            .computationThreadPoolSize(3)
-            .build();
+                .Builder()
+                .ioThreadPoolSize(3)
+                .computationThreadPoolSize(3)
+                .build();
 
         client = RedisClient.create(resources, RedisURI.create(getRedisUri(configuration)));
         client.setOptions(new ClientOptions.Builder().autoReconnect(true).build());

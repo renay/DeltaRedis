@@ -23,8 +23,7 @@ import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Callback;
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/11/15.
  */
 @FunctionalInterface
-public interface CachedPlayerCallback extends Callback<CachedPlayer>
-{
+public interface CachedPlayerCallback extends Callback<CachedPlayer> {
     /**
      * Method to call after the player is queried on Redis
      * <p>The parameter is null if no player was found.</p>

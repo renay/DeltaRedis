@@ -31,37 +31,31 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/28/15.
  */
-public class IsOnlineCommand implements CommandExecutor, Registerable, Shutdownable
-{
+public class IsOnlineCommand implements CommandExecutor, Registerable, Shutdownable {
     private DeltaRedis plugin;
 
-    public IsOnlineCommand(DeltaRedis plugin)
-    {
+    public IsOnlineCommand(DeltaRedis plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public void register()
-    {
+    public void register() {
         plugin.getCommand("isonline").setExecutor(this);
     }
 
     @Override
-    public void unregister()
-    {
+    public void unregister() {
         plugin.getCommand("isonline").setExecutor(null);
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         unregister();
         plugin = null;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
-    {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!sender.hasPermission("DeltaRedis.IsOnline")) {
             sender.sendMessage(format(
                     "NoPerm",
@@ -96,8 +90,7 @@ public class IsOnlineCommand implements CommandExecutor, Registerable, Shutdowna
         return true;
     }
 
-    private void sendMessage(String name, String message)
-    {
+    private void sendMessage(String name, String message) {
         if (name.equalsIgnoreCase("console")) {
             Bukkit.getConsoleSender().sendMessage(message);
         } else {

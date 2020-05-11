@@ -25,25 +25,21 @@ import java.util.Map;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class MapCache<K, V extends Cacheable>
-{
+public class MapCache<K, V extends Cacheable> {
     private final long invalidValueTime;
     private final HashMap<K, V> map = new HashMap<>();
 
-    public MapCache(long invalidValueTime)
-    {
+    public MapCache(long invalidValueTime) {
         this.invalidValueTime = invalidValueTime;
     }
 
-    public synchronized void put(K key, V value)
-    {
+    public synchronized void put(K key, V value) {
         if (key != null && value != null) {
             map.put(key, value);
         }
     }
 
-    public synchronized V get(K key)
-    {
+    public synchronized V get(K key) {
         V value = null;
         long currentTime = System.currentTimeMillis();
 
@@ -59,8 +55,7 @@ public class MapCache<K, V extends Cacheable>
         }
     }
 
-    public synchronized V remove(K key)
-    {
+    public synchronized V remove(K key) {
         if (key == null) {
             return null;
         }
@@ -68,13 +63,11 @@ public class MapCache<K, V extends Cacheable>
         return map.remove(key);
     }
 
-    public synchronized void clear()
-    {
+    public synchronized void clear() {
         map.clear();
     }
 
-    public synchronized void cleanup()
-    {
+    public synchronized void cleanup() {
         long currentTime = System.currentTimeMillis();
         Iterator<Map.Entry<K, V>> iter = map.entrySet().iterator();
 

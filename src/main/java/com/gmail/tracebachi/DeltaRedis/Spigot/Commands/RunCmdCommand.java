@@ -41,40 +41,34 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/28/15.
  */
-public class RunCmdCommand implements CommandExecutor, Listener, Registerable, Shutdownable
-{
+public class RunCmdCommand implements CommandExecutor, Listener, Registerable, Shutdownable {
     private DeltaRedis plugin;
 
-    public RunCmdCommand(DeltaRedis plugin)
-    {
+    public RunCmdCommand(DeltaRedis plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public void register()
-    {
+    public void register() {
         plugin.getCommand("runcmd").setExecutor(this);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
-    public void unregister()
-    {
+    public void unregister() {
         plugin.getCommand("runcmd").setExecutor(null);
 
         HandlerList.unregisterAll(this);
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         unregister();
         plugin = null;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args)
-    {
+    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!sender.hasPermission("DeltaRedis.RunCmd")) {
             sender.sendMessage(format(
                     "NoPerm",
@@ -136,8 +130,7 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
     }
 
     @EventHandler
-    public void onDeltaRedisMessage(DeltaRedisMessageEvent event)
-    {
+    public void onDeltaRedisMessage(DeltaRedisMessageEvent event) {
         String channel = event.getChannel();
         List<String> messageParts = event.getMessageParts();
 
@@ -153,13 +146,11 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
         }
     }
 
-    private String joinArgsForCommand(String[] args)
-    {
+    private String joinArgsForCommand(String[] args) {
         return String.join(" ", (CharSequence[]) Arrays.copyOfRange(args, 1, args.length));
     }
 
-    private boolean doesSetContain(Set<String> set, String source)
-    {
+    private boolean doesSetContain(Set<String> set, String source) {
         for (String item : set) {
             if (item.equalsIgnoreCase(source)) {
                 return true;
@@ -168,8 +159,7 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
         return false;
     }
 
-    private String getMatchInSet(Set<String> set, String source)
-    {
+    private String getMatchInSet(Set<String> set, String source) {
         for (String item : set) {
             if (item.equalsIgnoreCase(source)) {
                 return item;

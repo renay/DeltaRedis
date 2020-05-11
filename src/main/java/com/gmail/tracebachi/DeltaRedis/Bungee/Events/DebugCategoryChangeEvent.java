@@ -22,8 +22,7 @@ import net.md_5.bungee.api.plugin.Event;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/14/16.
  */
-public class DebugCategoryChangeEvent extends Event
-{
+public class DebugCategoryChangeEvent extends Event {
     private final String debugCategory;
     private final boolean enable;
 
@@ -34,8 +33,7 @@ public class DebugCategoryChangeEvent extends Event
      * @param enable        True if the user requested the debug category
      *                      to be enable or false
      */
-    public DebugCategoryChangeEvent(String debugCategory, boolean enable)
-    {
+    public DebugCategoryChangeEvent(String debugCategory, boolean enable) {
         Preconditions.checkNotNull(debugCategory, "debugCategory");
         Preconditions.checkArgument(!debugCategory.isEmpty(), "Empty debugCategory");
 
@@ -48,8 +46,7 @@ public class DebugCategoryChangeEvent extends Event
      * <p>Shared category strings may mean multiple will assume a change is
      * for them when it is not.</p>
      */
-    public String getDebugCategory()
-    {
+    public String getDebugCategory() {
         return debugCategory;
     }
 
@@ -57,8 +54,7 @@ public class DebugCategoryChangeEvent extends Event
      * @return True if the user requested the debug category to be
      * enable or disabled
      */
-    public boolean shouldEnable()
-    {
+    public boolean shouldEnable() {
         return enable;
     }
 }

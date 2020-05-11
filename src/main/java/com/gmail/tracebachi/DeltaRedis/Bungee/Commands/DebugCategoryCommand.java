@@ -36,42 +36,36 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/10/16.
  */
-public class DebugCategoryCommand extends Command implements Listener, Registerable, Shutdownable
-{
+public class DebugCategoryCommand extends Command implements Listener, Registerable, Shutdownable {
     private DeltaRedis plugin;
 
-    public DebugCategoryCommand(DeltaRedis deltaRedis)
-    {
+    public DebugCategoryCommand(DeltaRedis deltaRedis) {
         super("setdebugbungee");
         this.plugin = deltaRedis;
     }
 
     @Override
-    public void register()
-    {
+    public void register() {
         PluginManager pluginManager = plugin.getProxy().getPluginManager();
         pluginManager.registerCommand(plugin, this);
         pluginManager.registerListener(plugin, this);
     }
 
     @Override
-    public void unregister()
-    {
+    public void unregister() {
         PluginManager pluginManager = plugin.getProxy().getPluginManager();
         pluginManager.unregisterCommand(this);
         pluginManager.unregisterListener(this);
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         unregister();
         plugin = null;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args)
-    {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission("DeltaRedis.DebugCategory")) {
             sendMessage(sender, format(
                     "NoPerm",
@@ -110,8 +104,7 @@ public class DebugCategoryCommand extends Command implements Listener, Registera
     }
 
     @EventHandler
-    public void onDeltaRedisMessage(DeltaRedisMessageEvent event)
-    {
+    public void onDeltaRedisMessage(DeltaRedisMessageEvent event) {
         String channel = event.getChannel();
         List<String> messageParts = event.getMessageParts();
 
@@ -131,15 +124,13 @@ public class DebugCategoryCommand extends Command implements Listener, Registera
     }
 
     @EventHandler
-    public void onDebugCategoryChange(DebugCategoryChangeEvent event)
-    {
+    public void onDebugCategoryChange(DebugCategoryChangeEvent event) {
         if (event.getDebugCategory().equalsIgnoreCase("DeltaRedisBungee")) {
             plugin.setDebugEnabled(event.shouldEnable());
         }
     }
 
-    private void sendMessage(CommandSender receiver, String message)
-    {
+    private void sendMessage(CommandSender receiver, String message) {
         receiver.sendMessage(TextComponent.fromLegacyText(message));
     }
 }

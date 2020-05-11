@@ -34,37 +34,31 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.NEWLINE;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedisChatMessageListener implements Listener, Registerable, Shutdownable
-{
+public class DeltaRedisChatMessageListener implements Listener, Registerable, Shutdownable {
     private DeltaRedis plugin;
 
-    public DeltaRedisChatMessageListener(DeltaRedis plugin)
-    {
+    public DeltaRedisChatMessageListener(DeltaRedis plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public void register()
-    {
+    public void register() {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
-    public void unregister()
-    {
+    public void unregister() {
         HandlerList.unregisterAll(this);
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         unregister();
         plugin = null;
     }
 
     @EventHandler
-    public void onDeltaRedisMessage(DeltaRedisMessageEvent event)
-    {
+    public void onDeltaRedisMessage(DeltaRedisMessageEvent event) {
         String channel = event.getChannel();
         List<String> messageParts = event.getMessageParts();
 

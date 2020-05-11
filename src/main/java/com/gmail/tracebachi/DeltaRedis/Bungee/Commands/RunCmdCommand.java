@@ -42,42 +42,36 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.COMMA;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 4/28/16.
  */
-public class RunCmdCommand extends Command implements Listener, Registerable, Shutdownable
-{
+public class RunCmdCommand extends Command implements Listener, Registerable, Shutdownable {
     private DeltaRedis plugin;
 
-    public RunCmdCommand(DeltaRedis deltaRedis)
-    {
+    public RunCmdCommand(DeltaRedis deltaRedis) {
         super("runcmdbungee", null, "rcbungee");
         this.plugin = deltaRedis;
     }
 
     @Override
-    public void register()
-    {
+    public void register() {
         PluginManager pluginManager = plugin.getProxy().getPluginManager();
         pluginManager.registerCommand(plugin, this);
         pluginManager.registerListener(plugin, this);
     }
 
     @Override
-    public void unregister()
-    {
+    public void unregister() {
         PluginManager pluginManager = plugin.getProxy().getPluginManager();
         pluginManager.unregisterCommand(this);
         pluginManager.unregisterListener(this);
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         unregister();
         plugin = null;
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args)
-    {
+    public void execute(CommandSender sender, String[] args) {
         if (!sender.hasPermission("DeltaRedis.RunCmd")) {
             sendMessage(sender, format(
                     "NoPerm",
@@ -128,8 +122,7 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
     }
 
     @EventHandler
-    public void onDeltaRedisMessage(DeltaRedisMessageEvent event)
-    {
+    public void onDeltaRedisMessage(DeltaRedisMessageEvent event) {
         String channel = event.getChannel();
         List<String> messageParts = event.getMessageParts();
 
@@ -146,13 +139,11 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
         }
     }
 
-    private String joinArgsForCommand(String[] args)
-    {
+    private String joinArgsForCommand(String[] args) {
         return String.join(" ", (CharSequence[]) Arrays.copyOfRange(args, 1, args.length));
     }
 
-    private boolean doesSetContain(Set<String> set, String source)
-    {
+    private boolean doesSetContain(Set<String> set, String source) {
         for (String item : set) {
             if (item.equalsIgnoreCase(source)) {
                 return true;
@@ -161,8 +152,7 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
         return false;
     }
 
-    private String getMatchInSet(Set<String> set, String source)
-    {
+    private String getMatchInSet(Set<String> set, String source) {
         for (String item : set) {
             if (item.equalsIgnoreCase(source)) {
                 return item;
@@ -171,8 +161,7 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
         return null;
     }
 
-    private void sendMessage(CommandSender receiver, String message)
-    {
+    private void sendMessage(CommandSender receiver, String message) {
         receiver.sendMessage(TextComponent.fromLegacyText(message));
     }
 }
