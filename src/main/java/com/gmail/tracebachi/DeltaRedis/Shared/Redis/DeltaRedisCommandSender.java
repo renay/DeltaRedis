@@ -166,9 +166,7 @@ public class DeltaRedisCommandSender implements Shutdownable {
 
         // Add the rest of the message parts
         // Why: {dest, channel, {escaped parts}} vs. {dest, channel, part1, part2, ...}
-        for (String messagePart : messageParts) {
-            updatedList.add(messagePart);
-        }
+        updatedList.addAll(messageParts);
 
         String escaped = EscapeAndDelimiterUtil.DELTA_SEPARATED.escapeAndDelimit(updatedList);
 

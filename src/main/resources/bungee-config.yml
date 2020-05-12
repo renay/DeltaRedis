@@ -32,4 +32,4 @@ Formats:
   DebugCategoryChange: "[SUCCESS} Debug category {0} has been set to {1}"
 
 # Used for debugging DeltaRedis
-Debug: True
+Debug: False

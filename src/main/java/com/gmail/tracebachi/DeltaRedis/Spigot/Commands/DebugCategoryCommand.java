@@ -30,6 +30,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
+import java.util.Objects;
+
 import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
 
 /**
@@ -44,13 +46,13 @@ public class DebugCategoryCommand implements CommandExecutor, Listener, Register
 
     @Override
     public void register() {
-        plugin.getCommand("setdebug").setExecutor(this);
+        Objects.requireNonNull(plugin.getCommand("setdebug")).setExecutor(this);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
     public void unregister() {
-        plugin.getCommand("setdebug").setExecutor(null);
+        Objects.requireNonNull(plugin.getCommand("setdebug")).setExecutor(null);
         HandlerList.unregisterAll(this);
     }
 
