@@ -93,9 +93,15 @@ public class IsOnlineCommand implements CommandExecutor, Registerable, Shutdowna
     private void sendMessage(String name, String message) {
         if (name.equalsIgnoreCase("console")) {
             Bukkit.getConsoleSender().sendMessage(message);
-        } else {
-            Player player = Bukkit.getPlayerExact(name);
-            player.sendMessage(message);
+            return;
         }
+
+        Player player = Bukkit.getPlayerExact(name);
+
+        if (player == null) {
+            return;
+        }
+
+        player.sendMessage(message);
     }
 }

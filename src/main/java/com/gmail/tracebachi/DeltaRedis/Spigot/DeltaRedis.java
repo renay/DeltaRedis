@@ -34,9 +34,11 @@ import com.lambdaworks.redis.api.StatefulRedisConnection;
 import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
 import com.lambdaworks.redis.resource.ClientResources;
 import com.lambdaworks.redis.resource.DefaultClientResources;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,9 +167,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
     }
 
     @Override
-    public void onRedisMessageEvent(String sendingServer,
-                                    String channel,
-                                    List<String> messageParts) {
+    public void onRedisMessageEvent(String sendingServer, String channel, List<String> messageParts) {
         Preconditions.checkNotNull(sendingServer, "sendingServer");
         Preconditions.checkNotNull(channel, "channel");
         Preconditions.checkNotNull(messageParts, "messageParts");
@@ -177,7 +177,14 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
                 channel,
                 messageParts);
 
-        getServer().getPluginManager().callEvent(event);
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                Bukkit.getPluginManager().callEvent(event);
+            }
+        };
+
+        runnable.runTask(this);
     }
 
     @Override

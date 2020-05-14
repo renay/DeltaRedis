@@ -157,9 +157,7 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface {
     }
 
     @Override
-    public void onRedisMessageEvent(String sendingServer,
-                                    String channel,
-                                    List<String> messageParts) {
+    public void onRedisMessageEvent(String sendingServer, String channel, List<String> messageParts) {
         Preconditions.checkNotNull(sendingServer, "sendingServer");
         Preconditions.checkNotNull(channel, "channel");
         Preconditions.checkNotNull(messageParts, "messageParts");

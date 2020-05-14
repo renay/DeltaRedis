@@ -66,16 +66,16 @@ public class DeltaRedisChatMessageListener implements Listener, Registerable, Sh
             String permission = messageParts.get(0);
             String[] lines = NEWLINE.split(messageParts.get(1));
 
-            if (permission.equals("")) {
-                for (String line : lines) {
+            for (String line : lines) {
+                if (permission.equals("")) {
                     Bukkit.broadcastMessage(line);
-                }
-            } else {
-                for (String line : lines) {
+                } else {
                     Bukkit.broadcast(line, permission);
                 }
             }
-        } else if (channel.equals(DeltaRedisChannels.SEND_MESSAGE)) {
+        }
+
+        if (channel.equals(DeltaRedisChannels.SEND_MESSAGE)) {
             String receiverName = messageParts.get(0);
             String[] lines = NEWLINE.split(messageParts.get(1));
 
@@ -86,10 +86,12 @@ public class DeltaRedisChatMessageListener implements Listener, Registerable, Sh
             } else {
                 Player receiver = Bukkit.getPlayerExact(receiverName);
 
-                if (receiver != null) {
-                    for (String line : lines) {
-                        receiver.sendMessage(line);
-                    }
+                if (receiver == null) {
+                    return;
+                }
+
+                for (String line : lines) {
+                    receiver.sendMessage(line);
                 }
             }
         }

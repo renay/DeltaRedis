@@ -186,15 +186,11 @@ public class DeltaRedisApi {
         Preconditions.checkNotNull(messageParts, "messageParts");
 
         if (plugin.getServerName().equals(destination)) {
-            Bukkit.getScheduler().runTask(
-                    plugin,
-                    () -> plugin.onRedisMessageEvent(destination, channel, messageParts));
+            Bukkit.getScheduler().runTask(plugin, () -> plugin.onRedisMessageEvent(destination, channel, messageParts));
             return;
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(
-                plugin,
-                () -> deltaSender.publish(destination, channel, messageParts));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> deltaSender.publish(destination, channel, messageParts));
     }
 
     /**

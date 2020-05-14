@@ -18,6 +18,7 @@ package com.gmail.tracebachi.DeltaRedis.Spigot.Events;
 
 import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedisApi;
 import com.google.common.base.Preconditions;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -28,9 +29,9 @@ import java.util.List;
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
 public class DeltaRedisMessageEvent extends Event {
+    private final List<String> messageParts;
     private final String sendingServer;
     private final String channel;
-    private final List<String> messageParts;
 
     public DeltaRedisMessageEvent(String sendingServer, String channel, List<String> messageParts) {
         Preconditions.checkNotNull(sendingServer, "sendingServer");
@@ -39,8 +40,8 @@ public class DeltaRedisMessageEvent extends Event {
         Preconditions.checkArgument(!sendingServer.isEmpty(), "Empty sendingServer");
         Preconditions.checkArgument(!channel.isEmpty(), "Empty channel");
 
-        this.sendingServer = sendingServer;
         this.channel = channel;
+        this.sendingServer = sendingServer;
         this.messageParts = Collections.unmodifiableList(messageParts);
     }
 
