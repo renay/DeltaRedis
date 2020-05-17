@@ -17,6 +17,7 @@
 package com.gmail.tracebachi.DeltaRedis.Bungee.Events;
 
 import com.google.common.base.Preconditions;
+import lombok.NonNull;
 import net.md_5.bungee.api.plugin.Event;
 
 import java.util.Collections;
@@ -30,10 +31,7 @@ public class DeltaRedisMessageEvent extends Event {
     private final String channel;
     private final List<String> messageParts;
 
-    public DeltaRedisMessageEvent(String sendingServer, String channel, List<String> messageParts) {
-        Preconditions.checkNotNull(sendingServer, "sendingServer");
-        Preconditions.checkNotNull(channel, "channel");
-        Preconditions.checkNotNull(messageParts, "messageParts");
+    public DeltaRedisMessageEvent(@NonNull String sendingServer, @NonNull String channel, @NonNull List<String> messageParts) {
         Preconditions.checkArgument(!sendingServer.isEmpty(), "Empty sendingServer");
         Preconditions.checkArgument(!channel.isEmpty(), "Empty channel");
 

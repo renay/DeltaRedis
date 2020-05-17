@@ -17,6 +17,7 @@
 package com.gmail.tracebachi.DeltaRedis.Spigot.Events;
 
 import com.google.common.base.Preconditions;
+import lombok.NonNull;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -35,8 +36,7 @@ public class DebugCategoryChangeEvent extends Event {
      * @param enable        True if the user requested the debug category
      *                      to be enable or false
      */
-    public DebugCategoryChangeEvent(String debugCategory, boolean enable) {
-        Preconditions.checkNotNull(debugCategory, "debugCategory");
+    public DebugCategoryChangeEvent(@NonNull String debugCategory, boolean enable) {
         Preconditions.checkArgument(!debugCategory.isEmpty(), "Empty debugCategory");
 
         this.debugCategory = debugCategory;

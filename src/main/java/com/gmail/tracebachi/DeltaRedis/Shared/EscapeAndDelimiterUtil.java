@@ -17,6 +17,7 @@
 package com.gmail.tracebachi.DeltaRedis.Shared;
 
 import com.google.common.base.Preconditions;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +62,7 @@ public class EscapeAndDelimiterUtil {
      * @param input List of strings to escape and delimit
      * @return Escaped and delimited string
      */
-    public String escapeAndDelimit(List<String> input) {
-        Preconditions.checkNotNull(input, "input");
+    public String escapeAndDelimit(@NonNull List<String> input) {
 
         StringBuilder builder = new StringBuilder(256);
 

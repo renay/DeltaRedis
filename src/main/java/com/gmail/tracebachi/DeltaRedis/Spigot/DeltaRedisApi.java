@@ -20,6 +20,7 @@ import com.gmail.tracebachi.DeltaRedis.Shared.Cache.CachedPlayer;
 import com.gmail.tracebachi.DeltaRedis.Shared.Redis.DeltaRedisCommandSender;
 import com.gmail.tracebachi.DeltaRedis.Shared.Servers;
 import com.google.common.base.Preconditions;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -90,9 +91,7 @@ public class DeltaRedisApi {
      * @return A list of player names that begins with the partial
      * sent to this method
      */
-    public List<String> matchStartOfPlayerName(String partial) {
-        Preconditions.checkNotNull(partial, "partial");
-
+    public List<String> matchStartOfPlayerName(@NonNull String partial) {
         List<String> result = new ArrayList<>();
         partial = partial.toLowerCase();
 
@@ -110,9 +109,7 @@ public class DeltaRedisApi {
      * @return A list of server names that begins with the partial
      * sent to this method
      */
-    public List<String> matchStartOfServerName(String partial) {
-        Preconditions.checkNotNull(partial, "partial");
-
+    public List<String> matchStartOfServerName(@NonNull String partial) {
         List<String> result = new ArrayList<>();
         partial = partial.toLowerCase();
 
@@ -144,10 +141,7 @@ public class DeltaRedisApi {
      * @param callback     Callback to run when fetch is complete
      * @param syncCallback Set to true to run callback sync else it will run async
      */
-    public void findPlayer(String playerName, CachedPlayerCallback callback, boolean syncCallback) {
-        Preconditions.checkNotNull(playerName, "playerName");
-        Preconditions.checkNotNull(callback, "callback");
-
+    public void findPlayer(@NonNull String playerName, @NonNull CachedPlayerCallback callback, boolean syncCallback) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
         {
             CachedPlayer cachedPlayer = deltaSender.getPlayer(playerName);
@@ -180,10 +174,7 @@ public class DeltaRedisApi {
      * @param channel      Channel of the message
      * @param messageParts The actual message
      */
-    public void publish(String destination, String channel, List<String> messageParts) {
-        Preconditions.checkNotNull(destination, "destination");
-        Preconditions.checkNotNull(channel, "channel");
-        Preconditions.checkNotNull(messageParts, "messageParts");
+    public void publish(@NonNull String destination, @NonNull String channel, @NonNull List<String> messageParts) {
 
         if (plugin.getServerName().equals(destination)) {
             Bukkit.getScheduler().runTask(plugin, () -> plugin.onRedisMessageEvent(destination, channel, messageParts));

@@ -34,6 +34,7 @@ import com.lambdaworks.redis.api.StatefulRedisConnection;
 import com.lambdaworks.redis.pubsub.StatefulRedisPubSubConnection;
 import com.lambdaworks.redis.resource.ClientResources;
 import com.lambdaworks.redis.resource.DefaultClientResources;
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -149,8 +150,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
     }
 
     @Override
-    public void onRedisMessageEvent(List<String> allMessageParts) {
-        Preconditions.checkNotNull(allMessageParts, "allMessageParts");
+    public void onRedisMessageEvent(@NonNull List<String> allMessageParts) {
         Preconditions.checkArgument(
                 allMessageParts.size() >= 2,
                 "Less than expected number of parts in message");
@@ -167,11 +167,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
     }
 
     @Override
-    public void onRedisMessageEvent(String sendingServer, String channel, List<String> messageParts) {
-        Preconditions.checkNotNull(sendingServer, "sendingServer");
-        Preconditions.checkNotNull(channel, "channel");
-        Preconditions.checkNotNull(messageParts, "messageParts");
-
+    public void onRedisMessageEvent(@NonNull String sendingServer, @NonNull String channel, @NonNull List<String> messageParts) {
         DeltaRedisMessageEvent event = new DeltaRedisMessageEvent(
                 sendingServer,
                 channel,

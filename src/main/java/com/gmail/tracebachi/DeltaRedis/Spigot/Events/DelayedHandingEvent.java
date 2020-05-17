@@ -18,6 +18,7 @@ package com.gmail.tracebachi.DeltaRedis.Spigot.Events;
 
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Callback;
 import com.google.common.base.Preconditions;
+import lombok.NonNull;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 
@@ -37,8 +38,7 @@ public abstract class DelayedHandingEvent<T> extends Event {
     /**
      * @param callback Callback to call when there are no intents left
      */
-    public DelayedHandingEvent(Callback<T> callback) {
-        Preconditions.checkNotNull(callback, "callback");
+    public DelayedHandingEvent(@NonNull Callback<T> callback) {
         this.callback = callback;
     }
 
@@ -47,9 +47,7 @@ public abstract class DelayedHandingEvent<T> extends Event {
      *
      * @param plugin Plugin to register intent with
      */
-    public void registerIntent(Plugin plugin) {
-        Preconditions.checkNotNull(plugin, "plugin");
-
+    public void registerIntent(@NonNull Plugin plugin) {
         synchronized (LOCK) {
             Preconditions.checkArgument(!fired, "Event has finished firing");
             Preconditions.checkArgument(
@@ -65,9 +63,7 @@ public abstract class DelayedHandingEvent<T> extends Event {
      *
      * @param plugin Plugin to complete intent with
      */
-    public void completeIntent(Plugin plugin) {
-        Preconditions.checkNotNull(plugin, "plugin");
-
+    public void completeIntent(@NonNull Plugin plugin) {
         synchronized (LOCK) {
             Preconditions.checkArgument(
                     intents.remove(plugin),

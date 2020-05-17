@@ -23,6 +23,7 @@ import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Servers;
 import com.google.common.base.Preconditions;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
+import lombok.NonNull;
 
 import java.util.*;
 
@@ -153,12 +154,8 @@ public class DeltaRedisCommandSender implements Shutdownable {
      * @param messageParts String message parts to send
      * @return The number of servers that received the message
      */
-    public synchronized long publish(String dest, String channel, List<String> messageParts) {
+    public synchronized long publish(@NonNull String dest, @NonNull String channel, @NonNull List<String> messageParts) {
         plugin.debug("DeltaRedisCommandSender.publish()");
-
-        Preconditions.checkNotNull(dest, "dest");
-        Preconditions.checkNotNull(channel, "channel");
-        Preconditions.checkNotNull(messageParts, "messageParts");
 
         List<String> updatedList = new ArrayList<>(messageParts.size() + 2);
         updatedList.add(serverName);

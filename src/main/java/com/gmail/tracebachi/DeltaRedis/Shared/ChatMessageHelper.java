@@ -18,6 +18,7 @@ package com.gmail.tracebachi.DeltaRedis.Shared;
 
 import com.gmail.tracebachi.DeltaRedis.Shared.Structures.CaseInsensitiveHashMap;
 import com.google.common.base.Preconditions;
+import lombok.NonNull;
 
 import java.text.MessageFormat;
 
@@ -49,9 +50,7 @@ public class ChatMessageHelper {
      * @return Formatted string or string indicating that the format was not
      * found
      */
-    public static String format(String formatName, String... arguments) {
-        Preconditions.checkNotNull(formatName, "formatName");
-        Preconditions.checkNotNull(arguments, "arguments");
+    public static String format(@NonNull String formatName, @NonNull String... arguments) {
 
         if (instance == null) {
             instance = new ChatMessageHelper();
@@ -113,9 +112,7 @@ public class ChatMessageHelper {
      * @param format     String representation of the format like the one
      *                   that would be used in {@link MessageFormat}
      */
-    public void updateFormat(String formatName, String format) {
-        Preconditions.checkNotNull(formatName, "formatName");
-        Preconditions.checkNotNull(format, "format");
+    public void updateFormat(@NonNull String formatName, @NonNull String format) {
         formatMap.put(formatName, new MessageFormat(format));
     }
 

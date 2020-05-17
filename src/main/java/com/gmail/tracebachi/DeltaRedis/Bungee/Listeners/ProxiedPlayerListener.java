@@ -20,7 +20,6 @@ import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedis;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Redis.DeltaRedisCommandSender;
-import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -28,7 +27,6 @@ import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -90,10 +88,6 @@ public class ProxiedPlayerListener implements Listener, Registerable, Shutdownab
         String playerName = player.getName();
         String serverName = event.getServer().getInfo().getName();
         String ip = player.getSocketAddress().toString();
-
-        Preconditions.checkNotNull(playerName, "playerName");
-        Preconditions.checkNotNull(serverName, "serverName");
-        Preconditions.checkNotNull(ip, "ip");
 
         HashMap<String, String> map = new HashMap<>();
         map.put("server", serverName);
