@@ -39,10 +39,10 @@ public class DeltaRedisCommandSender implements Shutdownable {
     private final String playerSetKey;
 
     private StatefulRedisConnection<String, String> connection;
+    private Set<CachedPlayer> cachedPlayers = new HashSet<>();
     private DeltaRedisInterface plugin;
     private boolean isBungeeCordOnline;
     private Set<String> cachedServers;
-    private Set<CachedPlayer> cachedPlayers;
 
     public DeltaRedisCommandSender(StatefulRedisConnection<String, String> connection, DeltaRedisInterface plugin) {
         this.plugin = plugin;
