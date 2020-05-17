@@ -23,10 +23,12 @@ public class CachedPlayer implements Cacheable {
     private final String ip;
     private final String server;
     private final long timeCreatedAt;
+    private final String originalName;
 
-    public CachedPlayer(String ip, String server) {
+    public CachedPlayer(String ip, String server, String originalName) {
         this.ip = ip;
         this.server = server;
+        this.originalName = originalName;
         this.timeCreatedAt = System.currentTimeMillis();
     }
 
@@ -50,5 +52,19 @@ public class CachedPlayer implements Cacheable {
      */
     public String getServer() {
         return server;
+    }
+
+    /**
+     * @return The name of the player in the original register.
+     */
+    public String getOriginalName() {
+        return originalName;
+    }
+
+    /**
+     * @return The name of the player in insensitive case.
+     */
+    public String getName() {
+        return originalName.toLowerCase();
     }
 }

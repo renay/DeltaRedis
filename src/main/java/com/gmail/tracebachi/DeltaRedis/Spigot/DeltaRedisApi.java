@@ -82,7 +82,7 @@ public class DeltaRedisApi {
      * @return An unmodifiable set of player names that are part of the
      * same BungeeCord (from last call to {@link DeltaRedisCommandSender#getPlayers()})
      */
-    public Set<String> getCachedPlayers() {
+    public Set<CachedPlayer> getCachedPlayers() {
         return deltaSender.getCachedPlayers();
     }
 
@@ -95,9 +95,9 @@ public class DeltaRedisApi {
         List<String> result = new ArrayList<>();
         partial = partial.toLowerCase();
 
-        for (String name : getCachedPlayers()) {
-            if (name.startsWith(partial)) {
-                result.add(name);
+        for (CachedPlayer player : getCachedPlayers()) {
+            if (player.getName().startsWith(partial)) {
+                result.add(player.getOriginalName());
             }
         }
 

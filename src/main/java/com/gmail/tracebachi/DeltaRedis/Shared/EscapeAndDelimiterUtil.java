@@ -99,8 +99,7 @@ public class EscapeAndDelimiterUtil {
      * @param input Properly escaped and delimited string
      * @return Unescaped and undelimited strings in a list
      */
-    public List<String> unescapeAndUndelimit(String input) {
-        Preconditions.checkNotNull(input, "input");
+    public List<String> unescapeAndUndelimit(@NonNull String input) {
 
         List<String> result = new ArrayList<>(4);
         StringBuilder builder = new StringBuilder();

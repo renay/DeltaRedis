@@ -21,7 +21,9 @@ import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisInterface;
 import com.gmail.tracebachi.DeltaRedis.Shared.EscapeAndDelimiterUtil;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Servers;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
 import lombok.NonNull;
 
@@ -40,12 +42,11 @@ public class DeltaRedisCommandSender implements Shutdownable {
     private DeltaRedisInterface plugin;
     private boolean isBungeeCordOnline;
     private Set<String> cachedServers;
-    private Set<String> cachedPlayers;
+    private Set<CachedPlayer> cachedPlayers;
 
-    public DeltaRedisCommandSender(StatefulRedisConnection<String, String> connection,
-                                   DeltaRedisInterface plugin) {
-        this.connection = connection;
+    public DeltaRedisCommandSender(StatefulRedisConnection<String, String> connection, DeltaRedisInterface plugin) {
         this.plugin = plugin;
+        this.connection = connection;
         this.bungeeName = plugin.getBungeeName();
         this.serverName = plugin.getServerName();
         this.serverSetKey = bungeeName + ":servers";
@@ -106,10 +107,16 @@ public class DeltaRedisCommandSender implements Shutdownable {
      * @return An unmodifiable set of player names that are part of the
      * same BungeeCord (from Redis)
      */
-    public synchronized Set<String> getPlayers() {
+    public synchronized Set<CachedPlayer> getPlayers() {
         plugin.debug("DeltaRedisCommandSender.getPlayers()");
 
-        cachedPlayers = Collections.unmodifiableSet(connection.sync().smembers(playerSetKey));
+        List<String> members = connection.sync().hvals(playerSetKey);
+        Set<CachedPlayer> result = new HashSet<>();
+
+        members.forEach(m -> result.add(createCachedPlayer(decompressHashMap(m))));
+
+        cachedPlayers = Collections.unmodifiableSet(result);
+
         return cachedPlayers;
     }
 
@@ -128,7 +135,7 @@ public class DeltaRedisCommandSender implements Shutdownable {
      * @return An unmodifiable set of player names that are part of the
      * same BungeeCord (from last call to {@link #getPlayers()})
      */
-    public Set<String> getCachedPlayers() {
+    public Set<CachedPlayer> getCachedPlayers() {
         return cachedPlayers;
     }
 
@@ -177,26 +184,31 @@ public class DeltaRedisCommandSender implements Shutdownable {
      * @param playerName Name of the player to find
      * @return CachedPlayer if found and null if not
      */
-    public synchronized CachedPlayer getPlayer(String playerName) {
-        Preconditions.checkNotNull(playerName, "playerName");
+    public synchronized CachedPlayer getPlayer(@NonNull String playerName) {
+        String playerNameLower = playerName.toLowerCase();
+        plugin.debug("DeltaRedisCommandSender.getPlayer(" + playerNameLower + ")");
 
-        playerName = playerName.toLowerCase();
-        plugin.debug("DeltaRedisCommandSender.getPlayer(" + playerName + ")");
+        String serializedResult = connection.sync().hget(this.playerSetKey, playerNameLower);
 
-        Map<String, String> result = connection.sync().hgetall(getPlayerHashKey(playerName));
-
-        if (result == null) {
+        if (serializedResult == null) {
             return null;
         }
 
-        String ip = result.get("ip");
+        Map<String, String> result = decompressHashMap(serializedResult);
+
+        return createCachedPlayer(result);
+    }
+
+    private CachedPlayer createCachedPlayer(Map<String, String> result) {
+        String originalName = result.get("originalName");
         String server = result.get("server");
+        String ip = result.get("ip");
 
-        if (server == null || ip == null) {
+        if (null == server || null == ip || null == originalName) {
             return null;
         }
 
-        return new CachedPlayer(ip, server);
+        return new CachedPlayer(ip, server, originalName);
     }
 
     /**
@@ -204,14 +216,12 @@ public class DeltaRedisCommandSender implements Shutdownable {
      *
      * @param playerName Name of the player to remove
      */
-    public synchronized void removePlayer(String playerName) {
-        Preconditions.checkNotNull(playerName, "playerName");
+    public synchronized void removePlayer(@NonNull String playerName) {
 
         playerName = playerName.toLowerCase();
         plugin.debug("DeltaRedisCommandSender.removePlayer(" + playerName + ")");
 
-        connection.sync().srem(playerSetKey, playerName);
-        connection.sync().del(getPlayerHashKey(playerName));
+        connection.sync().hdel(playerSetKey, playerName);
     }
 
     /**
@@ -219,14 +229,24 @@ public class DeltaRedisCommandSender implements Shutdownable {
      *
      * @param playerName Name of the player to update
      */
-    public synchronized void updatePlayer(String playerName, Map<String, String> newValues) {
-        Preconditions.checkNotNull(playerName, "playerName");
-        Preconditions.checkNotNull(newValues, "newValues");
+    public synchronized void updatePlayer(@NonNull String playerName, @NonNull Map<String, String> newValues) {
 
         playerName = playerName.toLowerCase();
         plugin.debug("DeltaRedisCommandSender.updatePlayer(" + playerName + ")");
 
-        connection.sync().hmset(getPlayerHashKey(playerName), newValues);
+        String serializedMap = compressHashMap(newValues);
+
+        connection.sync().hset(this.playerSetKey, playerName, serializedMap);
+    }
+
+    private String compressHashMap(@NonNull Map<String, String> newValues) {
+        return Joiner.on(",").withKeyValueSeparator("=").join(newValues);
+    }
+
+    private Map<String, String> decompressHashMap(String serializedResult) {
+        return Splitter.on(',')
+                .withKeyValueSeparator('=')
+                .split(serializedResult);
     }
 
     private String getPlayerHashKey(String playerName) {

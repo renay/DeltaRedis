@@ -26,9 +26,9 @@ import java.text.MessageFormat;
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/11/16.
  */
 public class ChatMessageHelper {
-    private static ChatMessageHelper instance;
 
-    private CaseInsensitiveHashMap<MessageFormat> formatMap = new CaseInsensitiveHashMap<>();
+    private static ChatMessageHelper instance;
+    private final CaseInsensitiveHashMap<MessageFormat> formatMap = new CaseInsensitiveHashMap<>();
 
     /**
      * @return Singleton instance of the ChatMessageHelper
@@ -122,8 +122,7 @@ public class ChatMessageHelper {
      * @param formatName Name of the format to update
      * @return True if removed or false
      */
-    public boolean removeFormat(String formatName) {
-        Preconditions.checkNotNull(formatName, "formatName");
+    public boolean removeFormat(@NonNull String formatName) {
         return formatMap.remove(formatName) != null;
     }
 

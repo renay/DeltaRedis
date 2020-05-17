@@ -90,6 +90,7 @@ public class ProxiedPlayerListener implements Listener, Registerable, Shutdownab
         String ip = player.getSocketAddress().toString();
 
         HashMap<String, String> map = new HashMap<>();
+        map.put("originalName", playerName);
         map.put("server", serverName);
         map.put("ip", ip);
 
