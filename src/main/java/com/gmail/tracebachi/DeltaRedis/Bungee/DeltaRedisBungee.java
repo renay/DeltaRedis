@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedis extends Plugin implements DeltaRedisInterface {
+public class DeltaRedisBungee extends Plugin implements DeltaRedisInterface {
     private boolean debugEnabled;
     private String bungeeName;
     private DeltaRedisCommandSender commandSender;
@@ -70,7 +70,7 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface {
         info("-----------------------------------------------------------------");
         info("[IMPORTANT] Please verify that all Spigot servers are configured");
         info("[IMPORTANT] with their correct cased name. For example: ");
-        info("[IMPORTANT] \'World\' is not the same as \'world\'");
+        info("[IMPORTANT] 'World' is not the same as 'world'");
         for (Map.Entry<String, ServerInfo> entry : getProxy().getServers().entrySet()) {
             info("[IMPORTANT] Case-sensitive server name: " + entry.getValue().getName());
         }
@@ -237,7 +237,7 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface {
             if (value != null) {
                 String translatedFormat = ChatColor
                         .translateAlternateColorCodes('&', value);
-                ChatMessageHelper.instance().updateFormat("DeltaRedis." + key, translatedFormat);
+                ChatMessageHelper.instance().updateFormat("DeltaRedisBungee." + key, translatedFormat);
             }
         }
     }
@@ -258,14 +258,13 @@ public class DeltaRedis extends Plugin implements DeltaRedisInterface {
     }
 
     private void setupRedis(Configuration configuration) {
-        resources = new DefaultClientResources
-                .Builder()
+        resources = DefaultClientResources.builder()
                 .ioThreadPoolSize(3)
                 .computationThreadPoolSize(3)
                 .build();
 
         client = RedisClient.create(resources, RedisURI.create(getRedisUri(configuration)));
-        client.setOptions(new ClientOptions.Builder().autoReconnect(true).build());
+        client.setOptions(ClientOptions.builder().autoReconnect(true).build());
 
         pubSubConn = client.connectPubSub();
         commandConn = client.connect();

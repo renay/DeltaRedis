@@ -16,7 +16,7 @@
  */
 package com.gmail.tracebachi.DeltaRedis.Bungee.Commands;
 
-import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedisBungee;
 import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedisApi;
 import com.gmail.tracebachi.DeltaRedis.Bungee.Events.DeltaRedisMessageEvent;
 import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels;
@@ -43,11 +43,11 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.COMMA;
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 4/28/16.
  */
 public class RunCmdCommand extends Command implements Listener, Registerable, Shutdownable {
-    private DeltaRedis plugin;
+    private DeltaRedisBungee plugin;
 
-    public RunCmdCommand(DeltaRedis deltaRedis) {
+    public RunCmdCommand(DeltaRedisBungee plugin) {
         super("runcmdbungee", null, "rcbungee");
-        this.plugin = deltaRedis;
+        this.plugin = plugin;
     }
 
     @Override
@@ -140,7 +140,7 @@ public class RunCmdCommand extends Command implements Listener, Registerable, Sh
     }
 
     private String joinArgsForCommand(String[] args) {
-        return String.join(" ", (CharSequence[]) Arrays.copyOfRange(args, 1, args.length));
+        return String.join(" ", Arrays.copyOfRange(args, 1, args.length));
     }
 
     private boolean doesSetContain(Set<String> set, String source) {

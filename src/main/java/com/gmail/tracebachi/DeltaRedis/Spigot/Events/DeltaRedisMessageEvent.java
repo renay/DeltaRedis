@@ -34,6 +34,7 @@ public class DeltaRedisMessageEvent extends Event {
     private final String channel;
 
     public DeltaRedisMessageEvent(@NonNull String sendingServer, @NonNull String channel, @NonNull List<String> messageParts) {
+        super(true);
         Preconditions.checkArgument(!sendingServer.isEmpty(), "Empty sendingServer");
         Preconditions.checkArgument(!channel.isEmpty(), "Empty channel");
 
@@ -83,6 +84,7 @@ public class DeltaRedisMessageEvent extends Event {
     /**
      * Used by the Bukkit/Spigot event system
      */
+    @NonNull
     public HandlerList getHandlers() {
         return handlers;
     }

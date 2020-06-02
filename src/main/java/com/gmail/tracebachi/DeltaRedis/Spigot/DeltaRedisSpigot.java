@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
-public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
+public class DeltaRedisSpigot extends JavaPlugin implements DeltaRedisInterface {
     private boolean debugEnabled;
     private int updatePeriod;
     private String bungeeName;
@@ -72,11 +72,11 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
     @Override
     public void onEnable() {
         info("-----------------------------------------------------------------");
-        info("[IMPORTANT] Please make sure that \'ServerName\' is *exactly* the");
+        info("[IMPORTANT] Please make sure that 'ServerName' is *exactly* the");
         info("[IMPORTANT] same as your BungeeCord config for this server.");
         info("[IMPORTANT] DeltaRedis and all plugins that depend on it may not");
         info("[IMPORTANT] run correctly if the name is not correct.");
-        info("[IMPORTANT] \'World\' is not the same as \'world\'");
+        info("[IMPORTANT] 'World' is not the same as 'world'");
         info("-----------------------------------------------------------------");
 
         reloadConfig();
@@ -178,14 +178,7 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
                 channel,
                 messageParts);
 
-        BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                Bukkit.getPluginManager().callEvent(event);
-            }
-        };
-
-        runnable.runTask(this);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     @Override
@@ -227,6 +220,11 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
         Preconditions.checkNotNull(serverName, "serverName");
 
         ConfigurationSection formatsSection = configuration.getConfigurationSection("Formats");
+
+        if (formatsSection == null) {
+            return;
+        }
+
         for (String key : formatsSection.getKeys(false)) {
             String value = formatsSection.getString(key);
             if (value != null) {
@@ -253,14 +251,13 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
     }
 
     private void setupRedis(ConfigurationSection configuration) {
-        resources = new DefaultClientResources
-                .Builder()
+        resources = DefaultClientResources.builder()
                 .ioThreadPoolSize(3)
                 .computationThreadPoolSize(3)
                 .build();
 
         client = RedisClient.create(resources, RedisURI.create(getRedisUri(configuration)));
-        client.setOptions(new ClientOptions.Builder().autoReconnect(true).build());
+        client.setOptions(ClientOptions.builder().autoReconnect(true).build());
 
         pubSubConn = client.connectPubSub();
         commandConn = client.connect();
@@ -269,7 +266,8 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
         pubSubConn.addListener(pubSubListener);
         pubSubConn.sync().subscribe(
                 getBungeeName() + ':' + getServerName(),
-                getBungeeName() + ':' + Servers.SPIGOT);
+                getBungeeName() + ':' + Servers.SPIGOT
+        );
 
         commandSender = new DeltaRedisCommandSender(commandConn, this);
         commandSender.setup();

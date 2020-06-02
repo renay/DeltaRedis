@@ -1,5 +1,5 @@
 ###############################################################################
-# DeltaRedis Configuration File
+# DeltaRedisBungee Configuration File
 ###############################################################################
 
 # Login and connection information for the Redis server
@@ -31,5 +31,5 @@ Formats:
   ServerNotFound: "[FAILURE] Server {0} is not online or does not exist"
   DebugCategoryChange: "[SUCCESS} Debug category {0} has been set to {1}"
 
-# Used for debugging DeltaRedis
+# Used for debugging DeltaRedisBungee
 Debug: False

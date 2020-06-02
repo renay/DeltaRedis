@@ -36,7 +36,7 @@ public class DeltaRedisApi {
     private static DeltaRedisApi instance;
 
     private DeltaRedisCommandSender deltaSender;
-    private DeltaRedis plugin;
+    private DeltaRedisBungee plugin;
 
     /**
      * @return Singleton instance of DeltaRedisApi
@@ -231,7 +231,7 @@ public class DeltaRedisApi {
     /**
      * Private constructor
      */
-    private DeltaRedisApi(DeltaRedisCommandSender deltaSender, DeltaRedis plugin) {
+    private DeltaRedisApi(DeltaRedisCommandSender deltaSender, DeltaRedisBungee plugin) {
         this.deltaSender = deltaSender;
         this.plugin = plugin;
     }
@@ -239,7 +239,7 @@ public class DeltaRedisApi {
     /**
      * Sets up the api instance
      */
-    static void setup(DeltaRedisCommandSender deltaSender, DeltaRedis plugin) {
+    static void setup(DeltaRedisCommandSender deltaSender, DeltaRedisBungee plugin) {
         if (instance != null) {
             shutdown();
         }

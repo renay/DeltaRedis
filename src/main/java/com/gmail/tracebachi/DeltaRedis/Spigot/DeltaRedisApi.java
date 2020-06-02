@@ -37,7 +37,7 @@ public class DeltaRedisApi {
     private static DeltaRedisApi instance;
 
     private DeltaRedisCommandSender deltaSender;
-    private DeltaRedis plugin;
+    private DeltaRedisSpigot plugin;
 
     /**
      * @return Singleton instance of DeltaRedisApi
@@ -185,23 +185,13 @@ public class DeltaRedisApi {
     }
 
     /**
-     * Publishes a message for all subscribed servers built from string message parts
-     *
-     * @param channel      Channel of the message
-     * @param messageParts The actual message
-     */
-    public void publishAll(String channel, String ...messageParts) {
-        publish(channel, Arrays.asList(messageParts));
-    }
-
-    /**
-     * Publishes a message to Redis for all subscribed servers
+     * Publishes a message to Redis for all subscribed spigot servers.
      *
      * @param channel      Channel of the message
      * @param messageParts The actual message
      */
     public void publish(@NonNull String channel, @NonNull List<String> messageParts) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> deltaSender.publish(channel, messageParts));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> deltaSender.publish(Servers.SPIGOT, channel, messageParts));
     }
 
     /**
@@ -212,11 +202,7 @@ public class DeltaRedisApi {
      * @param command    Command to send
      * @param sender     Name to record in the logs as having run the command
      */
-    public void sendServerCommand(String destServer, String command, String sender) {
-        Preconditions.checkNotNull(destServer, "destServer");
-        Preconditions.checkNotNull(command, "command");
-        Preconditions.checkNotNull(sender, "sender");
-
+    public void sendServerCommand(@NonNull String destServer, @NonNull String command, @NonNull String sender) {
         if (plugin.getServerName().equals(destServer)) {
             Bukkit.getScheduler().runTask(
                     plugin,
@@ -321,7 +307,7 @@ public class DeltaRedisApi {
     /**
      * Private constructor
      */
-    private DeltaRedisApi(DeltaRedisCommandSender deltaSender, DeltaRedis plugin) {
+    private DeltaRedisApi(DeltaRedisCommandSender deltaSender, DeltaRedisSpigot plugin) {
         this.deltaSender = deltaSender;
         this.plugin = plugin;
     }
@@ -329,7 +315,7 @@ public class DeltaRedisApi {
     /**
      * Sets up the api instance
      */
-    static void setup(DeltaRedisCommandSender deltaSender, DeltaRedis plugin) {
+    static void setup(DeltaRedisCommandSender deltaSender, DeltaRedisSpigot plugin) {
         if (instance != null) {
             shutdown();
         }
