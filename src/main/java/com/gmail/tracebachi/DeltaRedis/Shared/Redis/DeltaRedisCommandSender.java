@@ -179,6 +179,30 @@ public class DeltaRedisCommandSender implements Shutdownable {
     }
 
     /**
+     * Publishes a string message using Redis PubSub
+     *
+     * @param channel      Custom channel name for the message
+     * @param messageParts String message parts to send
+     * @return The number of servers that received the message
+     */
+    public synchronized long publish(@NonNull String channel, @NonNull List<String> messageParts) {
+        plugin.debug("DeltaRedisCommandSender.publish()");
+
+        List<String> updatedList = new ArrayList<>(messageParts.size() + 2);
+        updatedList.add(serverName);
+        updatedList.add(channel);
+
+        // Add the rest of the message parts
+        // Why: {dest, channel, {escaped parts}} vs. {dest, channel, part1, part2, ...}
+        updatedList.addAll(messageParts);
+
+        String escaped = EscapeAndDelimiterUtil.DELTA_SEPARATED.escapeAndDelimit(updatedList);
+
+        plugin.debug("Sending message: " + escaped);
+        return connection.sync().publish(bungeeName + ":*", escaped);
+    }
+
+    /**
      * Returns a player from Redis
      *
      * @param playerName Name of the player to find
@@ -247,9 +271,5 @@ public class DeltaRedisCommandSender implements Shutdownable {
         return Splitter.on(',')
                 .withKeyValueSeparator('=')
                 .split(serializedResult);
-    }
-
-    private String getPlayerHashKey(String playerName) {
-        return bungeeName + ":players:" + playerName;
     }
 }

@@ -147,7 +147,7 @@ public class RunCmdCommand implements CommandExecutor, Listener, Registerable, S
     }
 
     private String joinArgsForCommand(String[] args) {
-        return String.join(" ", (CharSequence[]) Arrays.copyOfRange(args, 1, args.length));
+        return String.join(" ", Arrays.copyOfRange(args, 1, args.length));
     }
 
     private boolean doesSetContain(Set<String> set, String source) {

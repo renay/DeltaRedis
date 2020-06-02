@@ -168,6 +168,11 @@ public class DeltaRedis extends JavaPlugin implements DeltaRedisInterface {
 
     @Override
     public void onRedisMessageEvent(@NonNull String sendingServer, @NonNull String channel, @NonNull List<String> messageParts) {
+
+        if (getServerName().equals(sendingServer)) {
+            return;
+        }
+
         DeltaRedisMessageEvent event = new DeltaRedisMessageEvent(
                 sendingServer,
                 channel,

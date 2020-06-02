@@ -185,6 +185,26 @@ public class DeltaRedisApi {
     }
 
     /**
+     * Publishes a message for all subscribed servers built from string message parts
+     *
+     * @param channel      Channel of the message
+     * @param messageParts The actual message
+     */
+    public void publishAll(String channel, String ...messageParts) {
+        publish(channel, Arrays.asList(messageParts));
+    }
+
+    /**
+     * Publishes a message to Redis for all subscribed servers
+     *
+     * @param channel      Channel of the message
+     * @param messageParts The actual message
+     */
+    public void publish(@NonNull String channel, @NonNull List<String> messageParts) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> deltaSender.publish(channel, messageParts));
+    }
+
+    /**
      * Sends a command that will run as OP by the receiving server
      *
      * @param destServer Destination server name, {@link Servers#SPIGOT},
