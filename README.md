@@ -1,4 +1,7 @@
 # DeltaRedis
+
+[![Build Status](https://ci.loper.me/job/DeltaRedis/badge/icon)](https://ci.loper.me/job/DeltaRedis)
+
 DeltaRedis uses the in-memory data structure store, [Redis](http://redis.io/), to create a new communication
 system for BungeeCord-linked Spigot servers.
 
