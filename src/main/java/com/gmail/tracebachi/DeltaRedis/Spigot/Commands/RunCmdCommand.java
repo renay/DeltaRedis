@@ -20,7 +20,7 @@ import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Servers;
-import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedisSpigot;
 import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedisApi;
 import com.gmail.tracebachi.DeltaRedis.Spigot.Events.DeltaRedisMessageEvent;
 import org.bukkit.Bukkit;
@@ -42,9 +42,9 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/28/15.
  */
 public class RunCmdCommand implements CommandExecutor, Listener, Registerable, Shutdownable {
-    private DeltaRedis plugin;
+    private DeltaRedisSpigot plugin;
 
-    public RunCmdCommand(DeltaRedis plugin) {
+    public RunCmdCommand(DeltaRedisSpigot plugin) {
         this.plugin = plugin;
     }
 

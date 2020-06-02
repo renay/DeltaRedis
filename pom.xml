@@ -6,7 +6,7 @@
 
     <groupId>com.gmail.tracebachi</groupId>
     <artifactId>DeltaRedis</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
 
     <name>DeltaRedis</name>
 
@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

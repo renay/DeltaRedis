@@ -148,8 +148,20 @@ public class DeltaRedisCommandSender implements Shutdownable {
      * @param messageParts String message parts to send
      * @return The number of servers that received the message
      */
+    // TODO: remove this method, use only (List<String> messageParts)
     public synchronized long publish(String dest, String channel, String... messageParts) {
         return publish(dest, channel, Arrays.asList(messageParts));
+    }
+
+    /**
+     * Publishes a string message using Redis PubSub
+     *
+     * @param channel      Custom channel name for the message
+     * @param messageParts String message parts to send
+     * @return The number of servers that received the message
+     */
+    public synchronized long publish(@NonNull String channel, @NonNull List<String> messageParts) {
+        return publish(Servers.SPIGOT, channel, messageParts);
     }
 
     /**
@@ -176,30 +188,6 @@ public class DeltaRedisCommandSender implements Shutdownable {
 
         plugin.debug("Sending message: " + escaped);
         return connection.sync().publish(bungeeName + ':' + dest, escaped);
-    }
-
-    /**
-     * Publishes a string message using Redis PubSub
-     *
-     * @param channel      Custom channel name for the message
-     * @param messageParts String message parts to send
-     * @return The number of servers that received the message
-     */
-    public synchronized long publish(@NonNull String channel, @NonNull List<String> messageParts) {
-        plugin.debug("DeltaRedisCommandSender.publish()");
-
-        List<String> updatedList = new ArrayList<>(messageParts.size() + 2);
-        updatedList.add(serverName);
-        updatedList.add(channel);
-
-        // Add the rest of the message parts
-        // Why: {dest, channel, {escaped parts}} vs. {dest, channel, part1, part2, ...}
-        updatedList.addAll(messageParts);
-
-        String escaped = EscapeAndDelimiterUtil.DELTA_SEPARATED.escapeAndDelimit(updatedList);
-
-        plugin.debug("Sending message: " + escaped);
-        return connection.sync().publish(bungeeName + ":*", escaped);
     }
 
     /**

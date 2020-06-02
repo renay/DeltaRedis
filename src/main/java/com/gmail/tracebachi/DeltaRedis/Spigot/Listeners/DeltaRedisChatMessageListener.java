@@ -19,7 +19,7 @@ package com.gmail.tracebachi.DeltaRedis.Spigot.Listeners;
 import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
-import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedisSpigot;
 import com.gmail.tracebachi.DeltaRedis.Spigot.Events.DeltaRedisMessageEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,9 +35,9 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.SplitPatterns.NEWLINE;
  * Created by Trace Bachi (tracebachi@gmail.com) on 10/18/15.
  */
 public class DeltaRedisChatMessageListener implements Listener, Registerable, Shutdownable {
-    private DeltaRedis plugin;
+    private DeltaRedisSpigot plugin;
 
-    public DeltaRedisChatMessageListener(DeltaRedis plugin) {
+    public DeltaRedisChatMessageListener(DeltaRedisSpigot plugin) {
         this.plugin = plugin;
     }
 

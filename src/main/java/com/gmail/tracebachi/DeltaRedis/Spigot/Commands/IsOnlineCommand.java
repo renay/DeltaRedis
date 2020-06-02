@@ -18,7 +18,7 @@ package com.gmail.tracebachi.DeltaRedis.Spigot.Commands;
 
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
-import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedisSpigot;
 import com.gmail.tracebachi.DeltaRedis.Spigot.DeltaRedisApi;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -32,9 +32,9 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 11/28/15.
  */
 public class IsOnlineCommand implements CommandExecutor, Registerable, Shutdownable {
-    private DeltaRedis plugin;
+    private DeltaRedisSpigot plugin;
 
-    public IsOnlineCommand(DeltaRedis plugin) {
+    public IsOnlineCommand(DeltaRedisSpigot plugin) {
         this.plugin = plugin;
     }
 

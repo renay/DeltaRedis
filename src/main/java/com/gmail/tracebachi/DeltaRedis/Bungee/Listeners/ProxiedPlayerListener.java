@@ -16,7 +16,7 @@
  */
 package com.gmail.tracebachi.DeltaRedis.Bungee.Listeners;
 
-import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedisBungee;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Registerable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Interfaces.Shutdownable;
 import com.gmail.tracebachi.DeltaRedis.Shared.Redis.DeltaRedisCommandSender;
@@ -36,9 +36,9 @@ import java.util.HashSet;
 public class ProxiedPlayerListener implements Listener, Registerable, Shutdownable {
     private final HashSet<String> onlinePlayers = new HashSet<>(64);
     private DeltaRedisCommandSender commandSender;
-    private DeltaRedis plugin;
+    private DeltaRedisBungee plugin;
 
-    public ProxiedPlayerListener(DeltaRedisCommandSender commandSender, DeltaRedis plugin) {
+    public ProxiedPlayerListener(DeltaRedisCommandSender commandSender, DeltaRedisBungee plugin) {
         this.commandSender = commandSender;
         this.plugin = plugin;
     }

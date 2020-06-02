@@ -16,7 +16,7 @@
  */
 package com.gmail.tracebachi.DeltaRedis.Bungee.Commands;
 
-import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedis;
+import com.gmail.tracebachi.DeltaRedis.Bungee.DeltaRedisBungee;
 import com.gmail.tracebachi.DeltaRedis.Bungee.Events.DebugCategoryChangeEvent;
 import com.gmail.tracebachi.DeltaRedis.Bungee.Events.DeltaRedisMessageEvent;
 import com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels;
@@ -37,11 +37,11 @@ import static com.gmail.tracebachi.DeltaRedis.Shared.ChatMessageHelper.format;
  * Created by Trace Bachi (tracebachi@gmail.com, BigBossZee) on 12/10/16.
  */
 public class DebugCategoryCommand extends Command implements Listener, Registerable, Shutdownable {
-    private DeltaRedis plugin;
+    private DeltaRedisBungee plugin;
 
-    public DebugCategoryCommand(DeltaRedis deltaRedis) {
+    public DebugCategoryCommand(DeltaRedisBungee plugin) {
         super("setdebugbungee");
-        this.plugin = deltaRedis;
+        this.plugin = plugin;
     }
 
     @Override

@@ -41,5 +41,5 @@ Formats:
   BungeeNotAvailable: "[FAILURE] Bungee is not online"
   DebugCategoryChange: "[SUCCESS} Debug category {0} has been set to {1}"
 
-# Used for debugging DeltaRedis
+# Used for debugging DeltaRedisBungee
 Debug: False
