@@ -26,6 +26,10 @@ import net.md_5.bungee.api.ProxyServer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.Executor;
 
 import static com.gmail.tracebachi.DeltaRedis.Shared.DeltaRedisChannels.*;
 
@@ -85,45 +89,58 @@ public class DeltaRedisApi {
         return deltaSender.getCachedPlayers();
     }
 
+    private <T> CompletableFuture<T> makeFuture(Callable<T> supplier) {
+        Executor executor = r -> ProxyServer.getInstance()
+                .getScheduler().runAsync(plugin, r);
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return supplier.call();
+            } catch (Exception e) {
+                if (e instanceof RuntimeException) {
+                    throw (RuntimeException) e;
+                }
+                throw new CompletionException(e);
+            }
+        }, executor);
+    }
+
     /**
      * Publishes a message built from string message parts
-     *
-     * @param destination   Server to send message to
+     *  @param destination   Server to send message to
      * @param channel       Channel of the message
      * @param messagePieces The parts of the message
+     * @return CompletableFuture<Long>
      */
-    public void publish(String destination, String channel, String... messagePieces) {
-        publish(destination, channel, Arrays.asList(messagePieces));
+    public CompletableFuture<Long> publish(String destination, String channel, String... messagePieces) {
+        return publish(destination, channel, Arrays.asList(messagePieces));
     }
 
     /**
      * Publishes a message to Redis
-     *
-     * @param destination  Server to send message to
+     *  @param destination  Server to send message to
      * @param channel      Channel of the message
      * @param messageParts The actual message
+     * @return CompletableFuture<Long>
      */
-    public void publish(@NonNull String destination, @NonNull String channel, @NonNull List<String> messageParts) {
+    public CompletableFuture<Long> publish(@NonNull String destination, @NonNull String channel, @NonNull List<String> messageParts) {
 
         if (plugin.getServerName().equals(destination)) {
             plugin.onRedisMessageEvent(destination, channel, messageParts);
-            return;
+            return null;
         }
 
-        ProxyServer.getInstance().getScheduler().runAsync(
-                plugin,
-                () -> deltaSender.publish(destination, channel, messageParts));
+        return makeFuture(() -> deltaSender.publish(destination, channel, messageParts));
     }
 
     /**
      * Sends a command that will run as OP by the receiving server
-     *
-     * @param destServer Destination server name, {@link Servers#SPIGOT},
+     *  @param destServer Destination server name, {@link Servers#SPIGOT},
      *                   or {@link Servers#BUNGEECORD}
      * @param command    Command to send
      * @param sender     Name to record in the logs as having run the command
+     * @return CompletableFuture<Long>
      */
-    public void sendServerCommand(String destServer, String command, String sender) {
+    public CompletableFuture<Long> sendServerCommand(String destServer, String command, String sender) {
         Preconditions.checkNotNull(destServer, "destServer");
         Preconditions.checkNotNull(command, "command");
         Preconditions.checkNotNull(sender, "sender");
@@ -131,12 +148,10 @@ public class DeltaRedisApi {
         if (plugin.getServerName().equals(destServer)) {
             ProxyServer instance = ProxyServer.getInstance();
             instance.getPluginManager().dispatchCommand(instance.getConsole(), command);
-            return;
+            return null;
         }
 
-        ProxyServer.getInstance().getScheduler().runAsync(
-                plugin,
-                () -> deltaSender.publish(destServer, RUN_CMD, sender, command));
+        return makeFuture(() -> deltaSender.publish(destServer, RUN_CMD, sender, command));
     }
 
     /**
