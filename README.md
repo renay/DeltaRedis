@@ -1,7 +1,5 @@
 # DeltaRedis
 
-[![Build Status](https://ci.loper.me/job/DeltaRedis/badge/icon)](https://ci.loper.me/job/DeltaRedis)
-
 DeltaRedis uses the in-memory data structure store, [Redis](http://redis.io/), to create a new communication
 system for BungeeCord-linked Spigot servers.
 
@@ -9,11 +7,8 @@ BungeeCord uses player connections and special Bukkit/Spigot channels to communi
 players. By using DeltaRedis, BungeeCord and servers can communicate, faster and easier, than the provided BungeeCord methods.
 
 # APIs
-There are two APIs: 
-[Spigot](https://github.com/renay/DeltaRedis/blob/master/src/main/java/com/gmail/tracebachi/DeltaRedis/Spigot/DeltaRedisApi.java)
-and
-[Bungee](https://github.com/renay/DeltaRedis/blob/master/src/main/java/com/gmail/tracebachi/DeltaRedis/Bungee/DeltaRedisApi.java). 
-They are similar in structure and use, but it is important to select the appropriate API depending on where your plugin will run.
+There are API: 
+[Spigot/NukkitX/BungeeCord](https://github.com/loperd/DeltaRedis/blob/master/shared/src/main/java/com/gmail/tracebachi/deltaredis/shared/DeltaRedisApi.java)
 
 ## How to include the API with Maven
 
@@ -30,8 +25,8 @@ They are similar in structure and use, but it is important to select the appropr
     <dependencies>
         <dependency>
             <groupId>com.gmail.tracebachi</groupId>
-            <artifactId>DeltaRedis</artifactId>
-            <version>3.x.x</version>
+            <artifactId>deltaredis</artifactId>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

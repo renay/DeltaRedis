@@ -1,0 +1,10 @@
+name: DeltaRedis
+main: com.gmail.tracebachi.deltaredis.nukkit.DeltaRedis
+version: "${project.version}"
+api: ["1.0.13"]
+load: POSTWORLD
+author: loperd
+authors: ["Trace Bachi", "Loper"]
+description: A plugin that creates a messaging channel between multiple servers or server->proxy.
+website: https://github.com/loperd/DeltaRedis
+prefix: "DeltaRedis"

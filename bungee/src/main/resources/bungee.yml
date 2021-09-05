@@ -1,0 +1,4 @@
+name: DeltaRedis
+main: com.gmail.tracebachi.deltaredis.bungee.DeltaRedis
+version: ${project.version}
+author: Trace Bachi (tracebachi@gmail.com, BigBossZee)

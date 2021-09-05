@@ -1,0 +1,45 @@
+###############################################################################
+# DeltaRedis Configuration File
+###############################################################################
+
+# Login and connection information for the Redis server
+redis:
+  host: localhost
+  port: 6379
+  password: null
+
+# Name        | Type
+# ------------------------
+# MrRoboto    | BungeeCord
+# Diamond     | Spigot
+# Gold        | Spigot
+# Iron        | Spigot
+
+# Name of the Proxy server instance to which the server belongs.
+# From the example, this should be set to 'MrRoboto'.
+proxy-name: bungee
+
+# Exact name of the server as listed in the BungeeCord config.
+# This name is case-sensitive! Please double check to make sure it is correct.
+# From the example, it should be 'Diamond', 'Gold' or 'Iron'.
+server-name: world
+
+# Time in ticks for every online server and online player update
+online-update-period: 300
+
+# Formatting Strings
+formats:
+
+  NoPerm: "&4[FAILURE]&f You do not have the {0} permission."
+  Usage: "&e[USAGE]&f {0}"
+  PlayerOffline: "&4[FAILURE]&f Player {0} is offline"
+  PlayerOnlyCommand: "&4[FAILURE]&f Only in-game players can use {0}"
+
+  PlayerOnlineOnServer: "&4[SUCCESS]&f Player {0} is online on {1}"
+  CommandSent: "&4[SUCCESS]&f Command sent to {0}"
+  ServerNotFound: "&4[FAILURE]&f Server {0} is not online or does not exist"
+  BungeeNotAvailable: "&4[FAILURE]&f Bungee is not online"
+  DebugCategoryChange: "&a[SUCCESS}&f Debug category {0} has been set to {1}"
+
+# Used for debugging DeltaRedisBungee
+debug: false
