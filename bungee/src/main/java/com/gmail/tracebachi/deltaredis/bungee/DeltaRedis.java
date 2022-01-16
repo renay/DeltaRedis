@@ -185,7 +185,7 @@ public class DeltaRedis extends Plugin implements DeltaRedisPlugin {
 
     @Override
     public RedisConnectionManager getRedisConnectionManager() {
-        return null;
+        return this.manager;
     }
 
     @Override

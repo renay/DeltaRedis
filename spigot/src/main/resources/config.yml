@@ -30,16 +30,16 @@ online-update-period: 300
 # Formatting Strings
 formats:
 
-  NoPerm: "&4[FAILURE]&f You do not have the {0} permission."
-  Usage: "&e[USAGE]&f {0}"
-  PlayerOffline: "&4[FAILURE]&f Player {0} is offline"
-  PlayerOnlyCommand: "&4[FAILURE]&f Only in-game players can use {0}"
+  NoPerm: "&4&lFAILURE &8> &7You do not have the {0} permission."
+  Usage: "&b&lUSAGE &8> &7{0}"
+  PlayerOffline: "&4&lFAILURE &8> &7Player {0} is offline"
+  PlayerOnlyCommand: "&4&lFAILURE &8> &7Only in-game players can use {0}"
 
-  PlayerOnlineOnServer: "&4[SUCCESS]&f Player {0} is online on {1}"
-  CommandSent: "&4[SUCCESS]&f Command sent to {0}"
-  ServerNotFound: "&4[FAILURE]&f Server {0} is not online or does not exist"
-  BungeeNotAvailable: "&4[FAILURE]&f Bungee is not online"
-  DebugCategoryChange: "&a[SUCCESS}&f Debug category {0} has been set to {1}"
+  PlayerOnlineOnServer: "&a&lSUCCESS &8> &7Player {0} is online on {1}"
+  CommandSent: "&a&lSUCCESS &8> &7Command sent to {0}"
+  ServerNotFound: "&4&lFAILURE &8> &7Server {0} is not online or does not exist"
+  BungeeNotAvailable: "&4&lFAILURE &8> &7Bungee is not online"
+  DebugCategoryChange: "&a&lSUCCESS &8> &7Debug category {0} has been set to {1}"
 
 # Used for debugging DeltaRedisBungee
 debug: false

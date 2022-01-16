@@ -29,7 +29,15 @@ public class RedisClientFactory {
     }
 
     private RedisURI createRedisUri(RedisCredentials credentials) {
-        return RedisURI.create(credentials.buildRedisUri());
+        RedisURI.Builder builder = RedisURI.Builder.redis(
+                credentials.host, credentials.port);
+        String password = credentials.password;
+
+        if (null != password && 0 != password.length()) {
+            builder = builder.withPassword(password);
+        }
+
+        return builder.build();
     }
 
     public RedisClient create() {
